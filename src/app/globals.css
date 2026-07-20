@@ -1,0 +1,225 @@
+@import "tailwindcss";
+
+:root {
+  /* Tokens del diseño de Figma (N33 Mockup) */
+  --n33-background: #f6f9ff;
+  --n33-surface: #ffffff;
+  --n33-foreground: #262626;
+  --n33-muted: #6b7280;
+  --n33-primary: #f33d5b;
+  --n33-primary-dark: #d92c48;
+  --n33-blue: #1f5faa;
+  --n33-blue-dark: #17497f;
+  --n33-tag: #179cff;
+  --n33-border: #e5e7eb;
+  --n33-ad: #d9d9d9;
+}
+
+@theme inline {
+  --color-n33-background: var(--n33-background);
+  --color-n33-surface: var(--n33-surface);
+  --color-n33-foreground: var(--n33-foreground);
+  --color-n33-muted: var(--n33-muted);
+  --color-n33-primary: var(--n33-primary);
+  --color-n33-primary-dark: var(--n33-primary-dark);
+  --color-n33-blue: var(--n33-blue);
+  --color-n33-blue-dark: var(--n33-blue-dark);
+  --color-n33-tag: var(--n33-tag);
+  --color-n33-border: var(--n33-border);
+  --color-n33-ad: var(--n33-ad);
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-helvetica: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --font-condensed: "Avenir Next Condensed", var(--font-oswald), "Arial Narrow",
+    sans-serif;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--n33-background);
+  color: var(--n33-foreground);
+}
+
+::selection {
+  background: var(--n33-primary);
+  color: #ffffff;
+}
+
+/* ---------- Animaciones ---------- */
+
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes menu-down {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes shimmer {
+  from {
+    background-position: 200% 0;
+  }
+  to {
+    background-position: -200% 0;
+  }
+}
+
+.animate-fade-up {
+  animation: fade-up 0.6s ease-out both;
+}
+
+.animate-menu-down {
+  animation: menu-down 0.28s ease-out both;
+}
+
+/* Cinta de "Información al momento" */
+.ticker-mask {
+  mask-image: linear-gradient(
+    to right,
+    transparent,
+    black 6%,
+    black 94%,
+    transparent
+  );
+}
+
+.ticker-track {
+  animation: marquee 22s linear infinite;
+}
+
+.ticker-track:hover {
+  animation-play-state: paused;
+}
+
+/* Placeholder de publicidad con brillo sutil */
+.ad-shimmer {
+  background: linear-gradient(
+    110deg,
+    var(--n33-ad) 42%,
+    #ececec 50%,
+    var(--n33-ad) 58%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 3.5s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .animate-fade-up,
+  .animate-menu-down,
+  .ticker-track,
+  .ad-shimmer {
+    animation: none;
+  }
+}
+
+/* Estilos para el contenido HTML que llega del backend de WordPress */
+.prose-n33 {
+  font-size: 1rem;
+  line-height: 2;
+  color: var(--n33-foreground);
+}
+
+.prose-n33 p {
+  margin-bottom: 1.25rem;
+}
+
+.prose-n33 h2,
+.prose-n33 h3,
+.prose-n33 h4 {
+  margin-top: 2rem;
+  margin-bottom: 0.75rem;
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.prose-n33 h2 {
+  font-size: 1.5rem;
+}
+
+.prose-n33 h3 {
+  font-size: 1.25rem;
+}
+
+.prose-n33 a {
+  color: var(--n33-primary);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.prose-n33 img {
+  margin: 1.5rem 0;
+  border-radius: 1rem;
+  height: auto;
+  max-width: 100%;
+}
+
+.prose-n33 figure {
+  margin: 1.5rem 0;
+}
+
+.prose-n33 figcaption {
+  margin-top: 0.5rem;
+  font-size: 0.875rem;
+  color: var(--n33-muted);
+}
+
+.prose-n33 blockquote {
+  margin: 1.5rem 0;
+  border-left: 4px solid var(--n33-primary);
+  padding-left: 1rem;
+  font-style: italic;
+  color: var(--n33-muted);
+}
+
+.prose-n33 ul,
+.prose-n33 ol {
+  margin: 1.25rem 0;
+  padding-left: 1.5rem;
+}
+
+.prose-n33 ul {
+  list-style: disc;
+}
+
+.prose-n33 ol {
+  list-style: decimal;
+}
+
+.prose-n33 li {
+  margin-bottom: 0.5rem;
+}
+
+.prose-n33 iframe,
+.prose-n33 video {
+  max-width: 100%;
+  border-radius: 1rem;
+}
