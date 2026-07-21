@@ -96,19 +96,6 @@ export const mainNav: NavItem[] = [
     ],
   },
   {
-    label: "Policiaca",
-    href: "/categoria/policiaca",
-    children: [
-      { label: "Seguridad Pública", href: search("seguridad pública") },
-      { label: "Narcomenudeo", href: search("narcomenudeo") },
-      { label: "Homicidios", href: search("homicidios") },
-      { label: "Accidentes", href: search("accidentes") },
-      { label: "Fiscalía", href: search("fiscalía") },
-      { label: "Detenciones", href: search("detenciones") },
-      { label: "Operativos", href: search("operativos") },
-    ],
-  },
-  {
     label: "Global",
     href: "/categoria/global",
     children: [
@@ -161,6 +148,19 @@ export const mainNav: NavItem[] = [
       { label: "Empresas Tech", href: search("empresas tech") },
     ],
   },
+  {
+    label: "Policiaca",
+    href: "/categoria/policiaca",
+    children: [
+      { label: "Seguridad Pública", href: search("seguridad pública") },
+      { label: "Narcomenudeo", href: search("narcomenudeo") },
+      { label: "Homicidios", href: search("homicidios") },
+      { label: "Accidentes", href: search("accidentes") },
+      { label: "Fiscalía", href: search("fiscalía") },
+      { label: "Detenciones", href: search("detenciones") },
+      { label: "Operativos", href: search("operativos") },
+    ],
+  },
 ];
 
 // Orden de categorías del footer según el diseño.
@@ -168,10 +168,10 @@ export const footerNav = [
   { label: "Editorial", href: "/categoria/editorial" },
   { label: "Estatal", href: "/categoria/gobierno" },
   { label: "Nacional", href: "/categoria/nacional" },
-  { label: "Policiaca", href: "/categoria/policiaca" },
   { label: "Global", href: "/categoria/global" },
   { label: "Deportes", href: "/categoria/deportes" },
   { label: "Sociales", href: "/categoria/sociales" },
   { label: "Tecnología", href: "/categoria/tecnologia" },
   { label: "Política", href: "/categoria/politica" },
+  { label: "Policiaca", href: "/categoria/policiaca" },
 ] as const;

@@ -177,6 +177,22 @@ Basado en el mockup "N33 Mockup" (nodos 170:48 portada y 48:130 menú). Los toke
 | `npm run build` | Build de producción |
 | `npm run start` | Servidor de producción |
 | `npm run lint` | ESLint |
+| `npm run test` | Pruebas unitarias (Vitest) |
+| `npm run test:watch` | Pruebas en modo watch |
+
+## Pruebas
+
+Pruebas unitarias con [Vitest](https://vitest.dev) centradas en la lógica pura (sin depender del DOM ni de la red). Los archivos viven junto al código como `*.test.ts`:
+
+- `src/lib/api/mappers.test.ts` — mapeo de posts de WordPress a `Article` (limpieza de HTML, entidades, categorías, autor, fechas UTC).
+- `src/lib/seo.test.ts` — esquemas JSON-LD (organización, `NewsArticle`, `CollectionPage`).
+- `src/lib/config/site.test.ts` — integridad de la navegación y codificación de búsquedas.
+- `src/lib/supabase.test.ts` — lectura de configuración de Supabase.
+
+```bash
+npm run test        # una sola pasada
+npm run test:watch  # re-ejecuta al guardar
+```
 
 ## Seguridad
 

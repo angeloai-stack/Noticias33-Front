@@ -73,8 +73,10 @@ export function AdminDashboard() {
     [],
   );
 
-  // Carga inicial sin filtros
+  // Carga inicial sin filtros. Es una descarga de datos al montar (la puesta
+  // en "cargando" es intencional), no un ciclo de renders en cascada.
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     loadLogs("", "");
   }, [loadLogs]);
 

@@ -183,12 +183,12 @@ export function Header({ headline }: HeaderProps) {
                 <ToggleCircle expanded={expanded} />
               </button>
 
-              <ul className="flex flex-1 items-center justify-between gap-x-6 whitespace-nowrap">
+              <ul className="grid flex-1 grid-cols-10 items-center gap-x-6 whitespace-nowrap">
                 {mainNav.map((item) => (
-                  <li key={item.label}>
+                  <li key={item.label} className="min-w-0">
                     <Link
                       href={item.href}
-                      className="relative font-helvetica text-[21.77px] font-bold text-n33-blue transition-colors duration-300 after:absolute after:-bottom-1 after:left-0 after:h-[2.5px] after:w-full after:origin-left after:scale-x-0 after:bg-n33-primary after:transition-transform after:duration-300 hover:text-n33-primary hover:after:scale-x-100"
+                      className="relative inline-block font-helvetica text-[21.77px] font-bold text-n33-blue transition-colors duration-300 after:absolute after:-bottom-1 after:left-0 after:h-[2.5px] after:w-full after:origin-left after:scale-x-0 after:bg-n33-primary after:transition-transform after:duration-300 hover:text-n33-primary hover:after:scale-x-100"
                     >
                       {item.label}
                     </Link>
@@ -204,7 +204,7 @@ export function Header({ headline }: HeaderProps) {
               <div className="mx-auto max-w-[1440px] px-6 lg:px-12">
                 <div className="flex gap-x-6 pb-10 pt-6">
                   <span aria-hidden="true" className="w-[20px] shrink-0" />
-                  <div className="grid flex-1 grid-cols-9 gap-x-6">
+                  <div className="grid flex-1 grid-cols-10 gap-x-6">
                     {mainNav.map((item) => (
                       <ul key={item.label} className="flex flex-col gap-[26px]">
                         {item.children.map((child) => (

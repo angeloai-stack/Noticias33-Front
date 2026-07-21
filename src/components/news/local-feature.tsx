@@ -25,6 +25,7 @@ export function LocalFeature({ article }: LocalFeatureProps) {
               src={article.coverImageUrl}
               alt={article.title}
               fill
+              priority
               className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
               sizes="(max-width: 768px) 100vw, 394px"
             />

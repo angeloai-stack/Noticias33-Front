@@ -18,12 +18,12 @@ export function Newsletter() {
         src="/design/newsletter-bg.jpg"
         alt=""
         fill
-        className="object-cover"
+        className="animate-ken-burns object-cover"
         sizes="100vw"
       />
 
       <div className="relative mx-auto flex max-w-[1440px] flex-wrap items-center justify-between gap-10 px-6 py-14 sm:py-24 lg:px-[190px]">
-        <div className="w-full sm:w-auto">
+        <div className="animate-fade-up w-full sm:w-auto">
           <h2
             id="newsletter-heading"
             className="font-condensed uppercase text-white"
@@ -37,21 +37,6 @@ export function Newsletter() {
           </h2>
 
           <NewsletterForm />
-        </div>
-
-        <div className="hidden flex-col items-center gap-2 lg:flex">
-          <Image
-            src="/design/logo-n33-footer.png"
-            alt="N33 Noticias 33"
-            width={140}
-            height={158}
-            className="h-auto w-[140px] object-contain drop-shadow-xl transition-transform duration-500 hover:scale-105"
-          />
-          <p className="text-center text-[14px] text-white">
-            @noticia33
-            <br />
-            www.noticias33.com
-          </p>
         </div>
       </div>
     </section>

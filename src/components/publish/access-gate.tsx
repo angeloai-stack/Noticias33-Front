@@ -33,8 +33,11 @@ export function AccessGate({
   const [error, setError] = useState(false);
 
   // sessionStorage solo existe en el navegador, por eso se lee en useEffect.
-  // `checked` evita un parpadeo del formulario mientras se resuelve.
+  // `checked` evita un parpadeo del formulario y el desajuste de hidratación
+  // (el servidor no puede conocer el valor). Es una lectura puntual de un
+  // sistema externo al montar, no un patrón de renders en cascada.
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setUnlocked(sessionStorage.getItem(storageKey) === "1");
     setChecked(true);
   }, [storageKey]);

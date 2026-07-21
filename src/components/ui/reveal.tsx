@@ -26,12 +26,8 @@ export function Reveal({ children, delay = 0, className = "" }: RevealProps) {
       return;
     }
 
-    // Usuarios que prefieren menos movimiento ven el contenido de inmediato
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      setVisible(true);
-      return;
-    }
-
+    // Nota: quienes prefieren menos movimiento ven el contenido de inmediato
+    // mediante CSS (ver .reveal-item en globals.css), sin animación ni salto.
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
@@ -53,7 +49,7 @@ export function Reveal({ children, delay = 0, className = "" }: RevealProps) {
     <div
       ref={ref}
       style={{ transitionDelay: `${delay}ms` }}
-      className={`transition-[opacity,transform] duration-700 ease-out ${
+      className={`reveal-item transition-[opacity,transform] duration-700 ease-out ${
         visible ? "translate-y-0 opacity-100" : "translate-y-6 opacity-0"
       } ${className}`}
     >
