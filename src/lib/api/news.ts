@@ -36,6 +36,7 @@ export async function getLatestArticles(
     "posts",
     {
       params: { ...EMBED_PARAMS, page, per_page: pageSize },
+      next: { tags: ["posts"] },
     },
   );
 
@@ -49,6 +50,7 @@ export async function getLatestArticles(
 export async function getFeaturedArticles(limit = 5): Promise<Article[]> {
   const sticky = await apiFetch<WpPost[]>("posts", {
     params: { ...EMBED_PARAMS, sticky: true, per_page: limit },
+    next: { tags: ["posts"] },
   });
 
   if (sticky.length > 0) {
@@ -57,6 +59,7 @@ export async function getFeaturedArticles(limit = 5): Promise<Article[]> {
 
   const latest = await apiFetch<WpPost[]>("posts", {
     params: { ...EMBED_PARAMS, per_page: limit },
+    next: { tags: ["posts"] },
   });
 
   return latest.map(mapWpPostToArticle);
@@ -66,6 +69,7 @@ export async function getFeaturedArticles(limit = 5): Promise<Article[]> {
 export async function getArticleBySlug(slug: string): Promise<Article | null> {
   const posts = await apiFetch<WpPost[]>("posts", {
     params: { ...EMBED_PARAMS, slug },
+    next: { tags: ["posts"] },
   });
 
   if (posts.length === 0) {
@@ -140,6 +144,7 @@ export async function getArticlesByCategory(
         page,
         per_page: pageSize,
       },
+      next: { tags: ["posts"] },
     },
   );
 

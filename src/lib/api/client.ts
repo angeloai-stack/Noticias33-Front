@@ -56,7 +56,7 @@ async function request(path: string, options: RequestOptions = {}) {
       Accept: "application/json",
       ...headers,
     },
-    next: init.next ?? { revalidate: 60 },
+    next: { revalidate: 60, ...init.next },
   });
 
   if (!response.ok) {

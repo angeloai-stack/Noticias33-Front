@@ -5,6 +5,7 @@
 // aparezca en el historial de /admin.
 // ============================================================================
 
+import { revalidatePath, revalidateTag } from "next/cache";
 import { NextResponse } from "next/server";
 import { wpAuthedFetch } from "@/lib/api/wp-admin";
 import { logPublicacion } from "@/lib/log";
@@ -78,6 +79,12 @@ export async function POST(request: Request) {
       title,
       wp_url: post.link,
     });
+
+    // Invalida el caché de Next.js para que la nota aparezca de inmediato
+    // en portada, categoría y su propia página, sin esperar al ISR por tiempo.
+    // `{ expire: 0 }` fuerza expiración inmediata (recomendado para webhooks).
+    revalidateTag("posts", { expire: 0 });
+    revalidatePath("/");
 
     return NextResponse.json({ url: post.link, id: post.id });
   } catch (error) {
