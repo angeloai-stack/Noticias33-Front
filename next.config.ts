@@ -21,6 +21,19 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+
+  // Los permalinks originales de WordPress tienen la forma
+  // /{categoria}/{yyyy}/{mm}/{dd}/{slug}/. Se redirigen a la ruta del front
+  // para no perder el tráfico e indexación ya existentes de Google.
+  async redirects() {
+    return [
+      {
+        source: "/:category/:yyyy(\\d{4})/:mm(\\d{2})/:dd(\\d{2})/:slug",
+        destination: "/noticia/:slug",
+        permanent: true,
+      },
+    ];
+  },
 };
 
 export default nextConfig;
