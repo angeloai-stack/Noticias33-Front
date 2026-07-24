@@ -7,6 +7,11 @@ const nextConfig: NextConfig = {
       {
         // Imágenes de las noticias (biblioteca de medios de WordPress)
         protocol: "https",
+        hostname: "cms.noticias33.com",
+      },
+      {
+        // Compatibilidad con imágenes antiguas que aún referencien el dominio raíz
+        protocol: "https",
         hostname: "noticias33.com",
       },
       {
