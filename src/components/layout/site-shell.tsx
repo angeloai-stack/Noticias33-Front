@@ -9,6 +9,7 @@ import { Footer } from "@/components/layout/footer";
 import { Header } from "@/components/layout/header";
 import { Newsletter } from "@/components/layout/newsletter";
 import { getLatestArticles } from "@/lib/api/news";
+import { getWeatherForCities } from "@/lib/api/weather";
 
 type SiteShellProps = {
   children: React.ReactNode;
@@ -28,11 +29,17 @@ async function getTickerHeadline(): Promise<string | null> {
 }
 
 export async function SiteShell({ children }: SiteShellProps) {
-  const headline = await getTickerHeadline();
+  // En paralelo: el mismo fetch de clima que usa la portada, cacheado por
+  // Next.js, así que no supone una petición extra a Open-Meteo. Se manda la
+  // lista completa: el Header elige ahí la ciudad más cercana a quien visita.
+  const [headline, weatherCities] = await Promise.all([
+    getTickerHeadline(),
+    getWeatherForCities(),
+  ]);
 
   return (
     <>
-      <Header headline={headline} />
+      <Header headline={headline} weather={weatherCities} />
       <main className="flex-1">{children}</main>
       <Newsletter />
       <Footer />

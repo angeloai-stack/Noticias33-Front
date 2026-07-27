@@ -11,8 +11,10 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { mainNav } from "@/lib/config/site";
+import type { CityWeather } from "@/lib/api/weather";
+import { useNearestCitySlug } from "@/lib/hooks/use-nearest-city";
 
 /** Fecha de hoy en formato editorial: "Martes 23 de junio del 2026". */
 function formatToday() {
@@ -66,17 +68,51 @@ function SearchForm({ id, className }: { id: string; className?: string }) {
   );
 }
 
+/** Clima pequeño junto al buscador, con el ícono de la condición actual. */
+function NavWeather({
+  weather,
+  className = "flex",
+}: {
+  weather: CityWeather;
+  /** Clases de display (p. ej. "hidden md:flex"); por defecto siempre visible. */
+  className?: string;
+}) {
+  return (
+    <div
+      role="img"
+      aria-label={`Clima en ${weather.name}: ${Math.round(weather.temperature)} grados, ${weather.description.toLowerCase()}`}
+      className={`${className} shrink-0 items-center gap-1.5 rounded-full bg-white/15 px-3 py-1.5 shadow-inner ring-1 ring-white/20`}
+    >
+      <span className="text-[18px] leading-none" aria-hidden="true">
+        {weather.icon}
+      </span>
+      <span className="whitespace-nowrap text-[14px] font-semibold text-white">
+        {Math.round(weather.temperature)}°C
+      </span>
+    </div>
+  );
+}
+
 type HeaderProps = {
   /** Titular más reciente para la marquesina; null oculta el ticker. */
   headline: string | null;
+  /** Clima actual de cada ciudad cubierta, para el badge junto al buscador. */
+  weather: CityWeather[];
 };
 
-export function Header({ headline }: HeaderProps) {
+export function Header({ headline, weather }: HeaderProps) {
   // Mega-menú de escritorio (Figma: "Menú plegado" / "desplegado")
   const [expanded, setExpanded] = useState(false);
   // Menú móvil tipo acordeón
   const [mobileOpen, setMobileOpen] = useState(false);
   const [openSection, setOpenSection] = useState<string | null>(null);
+
+  // Ciudad más cercana a quien visita (según su IP); Tijuana hasta resolver.
+  const nearestSlug = useNearestCitySlug();
+  const activeWeather = useMemo(
+    () => weather.find((city) => city.slug === nearestSlug) ?? weather[0],
+    [weather, nearestSlug],
+  );
 
   return (
     <>
@@ -135,6 +171,13 @@ export function Header({ headline }: HeaderProps) {
                 className="hidden min-w-0 max-w-[631px] flex-1 md:block"
               />
 
+              {activeWeather && (
+                <NavWeather
+                  weather={activeWeather}
+                  className="hidden md:flex"
+                />
+              )}
+
               {/* Botón hamburguesa (móvil) */}
               <button
                 type="button"
@@ -160,9 +203,10 @@ export function Header({ headline }: HeaderProps) {
             </div>
           </div>
 
-          {/* Buscador en fila propia (móvil) */}
-          <div className="px-4 pb-4 md:hidden">
-            <SearchForm id="header-search-mobile" />
+          {/* Buscador en fila propia (móvil), con el clima justo después */}
+          <div className="flex items-center gap-2 px-4 pb-4 md:hidden">
+            <SearchForm id="header-search-mobile" className="min-w-0 flex-1" />
+            {activeWeather && <NavWeather weather={activeWeather} />}
           </div>
         </div>
 

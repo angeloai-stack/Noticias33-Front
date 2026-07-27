@@ -17,27 +17,17 @@ import { NewsRowCard } from "@/components/news/news-row-card";
 import { ReelsCard } from "@/components/news/reels-card";
 import { WeatherCard } from "@/components/news/weather-card";
 import { Reveal } from "@/components/ui/reveal";
-import { getArticlesByCategory, getLatestArticles } from "@/lib/api/news";
-import type { Article } from "@/types/news";
+import { getLatestArticles } from "@/lib/api/news";
+import { getWeatherForCities } from "@/lib/api/weather";
 
 // Regenera la portada como máximo cada 60 segundos (ISR)
 export const revalidate = 60;
 
-/** Última noticia de la categoría Clima para la tarjeta de la barra lateral. */
-async function getClimaArticle(): Promise<Article | null> {
-  try {
-    const result = await getArticlesByCategory("clima", 1, 1);
-    return result?.data[0] ?? null;
-  } catch {
-    return null;
-  }
-}
-
 export default async function HomePage() {
   // Ambas peticiones en paralelo para no sumar latencias
-  const [{ data: articles }, climaArticle] = await Promise.all([
+  const [{ data: articles }, weatherCities] = await Promise.all([
     getLatestArticles(1, 17),
-    getClimaArticle(),
+    getWeatherForCities(),
   ]);
 
   if (articles.length === 0) {
@@ -110,7 +100,7 @@ export default async function HomePage() {
               <ReelsCard />
             </Reveal>
             <Reveal delay={120}>
-              <WeatherCard article={climaArticle} />
+              <WeatherCard cities={weatherCities} />
             </Reveal>
           </div>
         </div>
@@ -121,7 +111,7 @@ export default async function HomePage() {
             <ReelsCard />
           </Reveal>
           <Reveal delay={120}>
-            <WeatherCard article={climaArticle} />
+            <WeatherCard cities={weatherCities} />
           </Reveal>
           <AdPlaceholder className="h-[368px] w-[253px]" />
           <AdPlaceholder className="h-[368px] w-[253px]" />

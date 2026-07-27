@@ -19,6 +19,7 @@ export function ReelsCard() {
           alt="Reel de Noticias 33"
           width={818}
           height={1448}
+          priority
           className="h-auto w-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
         />
         <span className="absolute left-[10px] top-[10px] inline-flex h-[24px] w-[72px] items-center justify-center rounded-[12px] bg-n33-blue/90 text-[12px] font-bold text-white shadow-md backdrop-blur-sm">
