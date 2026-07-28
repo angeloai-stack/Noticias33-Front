@@ -129,22 +129,47 @@ export async function getWeatherForCities(): Promise<CityWeather[]> {
   }
 }
 
+const KM_PER_DEGREE_LAT = 111;
+
+/** Distancia aproximada en km entre dos coordenadas (suficiente a esta escala). */
+function distanceKm(lat1: number, lon1: number, lat2: number, lon2: number) {
+  const dLat = (lat1 - lat2) * KM_PER_DEGREE_LAT;
+  const dLon =
+    (lon1 - lon2) * KM_PER_DEGREE_LAT * Math.cos((lat1 * Math.PI) / 180);
+
+  return Math.sqrt(dLat * dLat + dLon * dLon);
+}
+
+/** Ciudad por defecto: la geolocalización por IP solo la desplaza si otra
+ * ciudad queda claramente más cerca (ver DEFAULT_CITY_BIAS_KM). */
+const DEFAULT_CITY_SLUG = "tijuana";
+
+/**
+ * Margen a favor de la ciudad por defecto. La geolocalización por IP suele
+ * tener 10-50 km de error, y Tijuana y Rosarito están a solo ~16 km entre
+ * sí: sin este margen, cualquier visitante de Tijuana con un poco de ruido
+ * en su IP terminaba viendo el clima de Rosarito.
+ */
+const DEFAULT_CITY_BIAS_KM = 12;
+
 /**
  * Ciudad cubierta más cercana a unas coordenadas (p. ej. la geolocalización
- * por IP de Vercel). Compara en grados, no en distancia real: alcanza para
- * ordenar por cercanía entre 7 puntos dentro de un mismo estado.
+ * por IP de Vercel), con la ciudad por defecto ligeramente favorecida para
+ * absorber el ruido típico de la geolocalización por IP.
  */
 export function getNearestCitySlug(lat: number, lon: number): string {
   let nearest: (typeof CITIES)[number] = CITIES[0];
-  let nearestDistance = Infinity;
+  let nearestScore = Infinity;
 
   for (const city of CITIES) {
-    const dLat = lat - city.lat;
-    const dLon = lon - city.lon;
-    const distance = dLat * dLat + dLon * dLon;
+    const distance = distanceKm(lat, lon, city.lat, city.lon);
+    const score =
+      city.slug === DEFAULT_CITY_SLUG
+        ? distance - DEFAULT_CITY_BIAS_KM
+        : distance;
 
-    if (distance < nearestDistance) {
-      nearestDistance = distance;
+    if (score < nearestScore) {
+      nearestScore = score;
       nearest = city;
     }
   }
