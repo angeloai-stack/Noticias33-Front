@@ -162,10 +162,6 @@ export function Header({ headline, weather }: HeaderProps) {
             </Link>
 
             <div className="ml-auto flex min-w-0 flex-1 items-center justify-end gap-4 lg:gap-6">
-              <span className="hidden shrink-0 font-helvetica text-[20px] font-medium text-white xl:inline">
-                Nacional
-              </span>
-
               <SearchForm
                 id="header-search"
                 className="hidden min-w-0 max-w-[631px] flex-1 md:block"
