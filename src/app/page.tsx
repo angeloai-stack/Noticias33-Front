@@ -23,6 +23,40 @@ import { getWeatherForCities } from "@/lib/api/weather";
 // Regenera la portada como máximo cada 60 segundos (ISR)
 export const revalidate = 60;
 
+// Enlace de contacto directo (WhatsApp) del anunciante Volt Lab Agency.
+const VOLTLAB_WHATSAPP = "https://wa.me/526647089550";
+
+// Anuncios reales colocados en los espacios publicitarios. Las tres primeras
+// imágenes se eligieron porque su proporción coincide con el hueco al que van
+// (evita recortes feos con object-cover). El rail inferior (116×965) es mucho
+// más angosto y alto que cualquier creativo disponible, así que reutiliza el
+// diseño de una sola columna (voltlabSidebar) recortado hacia la izquierda
+// para conservar los íconos y el inicio del texto en vez de un hueco vacío.
+const ADS = {
+  voltlabRail: {
+    imageUrl: "/ads/voltlab-rail.jpg",
+    alt: "Volt Lab Agency: publicidad, branding, sitios web, contenido, IA y automatización",
+    href: VOLTLAB_WHATSAPP,
+  },
+  voltlabSidebar: {
+    imageUrl: "/ads/voltlab-sidebar.jpg",
+    alt: "Volt Lab Agency: agenda una asesoría sin costo",
+    href: VOLTLAB_WHATSAPP,
+  },
+  voltlabTallRail: {
+    imageUrl: "/ads/voltlab-sidebar.jpg",
+    alt: "Volt Lab Agency: agenda una asesoría sin costo",
+    href: VOLTLAB_WHATSAPP,
+    fit: "contain",
+    background: "bg-black",
+  },
+  propertyDreamz: {
+    imageUrl: "/ads/property-dreamz-banner.jpg",
+    alt: "Property Dreamz Realty Group: casas, terrenos, departamentos, comercial e inversión",
+    href: "https://www.propertydreamz.com",
+  },
+} as const;
+
 export default async function HomePage() {
   // Ambas peticiones en paralelo para no sumar latencias
   const [{ data: articles }, weatherCities] = await Promise.all([
@@ -54,8 +88,8 @@ export default async function HomePage() {
           aria-label="Publicidad"
           className="hidden w-[116px] shrink-0 flex-col gap-9 xl:flex"
         >
-          <AdPlaceholder className="h-[279px]" />
-          <AdPlaceholder className="h-[965px]" />
+          <AdPlaceholder className="h-[279px]" ad={ADS.voltlabRail} />
+          <AdPlaceholder className="h-[965px]" ad={ADS.voltlabTallRail} />
         </aside>
 
         {/* Columna principal */}
@@ -113,14 +147,17 @@ export default async function HomePage() {
           <Reveal delay={120}>
             <WeatherCard cities={weatherCities} />
           </Reveal>
-          <AdPlaceholder className="h-[368px] w-[253px]" />
-          <AdPlaceholder className="h-[368px] w-[253px]" />
+          <AdPlaceholder className="h-[368px] w-[253px]" ad={ADS.voltlabSidebar} />
+          <AdPlaceholder className="h-[368px] w-[253px]" ad={ADS.voltlabSidebar} />
         </aside>
       </div>
 
       {/* Publicidad horizontal */}
       <div className="mt-10 flex justify-center lg:mt-16">
-        <AdPlaceholder className="h-[100px] w-full max-w-[1034px] sm:h-[145px]" />
+        <AdPlaceholder
+          className="h-[100px] w-full max-w-[1034px] sm:h-[145px]"
+          ad={ADS.propertyDreamz}
+        />
       </div>
 
       {/* Bloque azul: noticias de relevancia media baja */}
@@ -130,7 +167,10 @@ export default async function HomePage() {
 
       {/* Publicidad horizontal */}
       <div className="mt-10 flex justify-center lg:mt-16">
-        <AdPlaceholder className="h-[100px] w-full max-w-[1034px] sm:h-[145px]" />
+        <AdPlaceholder
+          className="h-[100px] w-full max-w-[1034px] sm:h-[145px]"
+          ad={ADS.propertyDreamz}
+        />
       </div>
     </div>
   );
