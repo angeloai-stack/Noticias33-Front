@@ -144,6 +144,16 @@ body {
   animation-play-state: paused;
 }
 
+/* Oculta la barra de scroll sin quitar el scroll (ej. categorías del footer) */
+.scrollbar-hide {
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* Edge legado */
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera */
+}
+
 /* Placeholder de publicidad con brillo sutil */
 .ad-shimmer {
   background: linear-gradient(

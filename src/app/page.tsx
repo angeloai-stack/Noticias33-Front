@@ -26,12 +26,9 @@ export const revalidate = 60;
 // Enlace de contacto directo (WhatsApp) del anunciante Volt Lab Agency.
 const VOLTLAB_WHATSAPP = "https://wa.me/526647089550";
 
-// Anuncios reales colocados en los espacios publicitarios. Las tres primeras
-// imágenes se eligieron porque su proporción coincide con el hueco al que van
-// (evita recortes feos con object-cover). El rail inferior (116×965) es mucho
-// más angosto y alto que cualquier creativo disponible, así que reutiliza el
-// diseño de una sola columna (voltlabSidebar) recortado hacia la izquierda
-// para conservar los íconos y el inicio del texto en vez de un hueco vacío.
+// Anuncios reales colocados en los espacios publicitarios. Cada imagen se
+// eligió porque su proporción coincide con el hueco al que va (evita
+// recortes feos con object-cover).
 const ADS = {
   voltlabRail: {
     imageUrl: "/ads/voltlab-rail.jpg",
@@ -42,13 +39,6 @@ const ADS = {
     imageUrl: "/ads/voltlab-sidebar.jpg",
     alt: "Volt Lab Agency: agenda una asesoría sin costo",
     href: VOLTLAB_WHATSAPP,
-  },
-  voltlabTallRail: {
-    imageUrl: "/ads/voltlab-sidebar.jpg",
-    alt: "Volt Lab Agency: agenda una asesoría sin costo",
-    href: VOLTLAB_WHATSAPP,
-    fit: "contain",
-    background: "bg-black",
   },
   propertyDreamz: {
     imageUrl: "/ads/property-dreamz-banner.jpg",
@@ -89,7 +79,7 @@ export default async function HomePage() {
           className="hidden w-[116px] shrink-0 flex-col gap-9 xl:flex"
         >
           <AdPlaceholder className="h-[279px]" ad={ADS.voltlabRail} />
-          <AdPlaceholder className="h-[965px]" ad={ADS.voltlabTallRail} />
+          <AdPlaceholder className="h-[279px]" ad={ADS.voltlabRail} />
         </aside>
 
         {/* Columna principal */}

@@ -1,6 +1,6 @@
 // ============================================================================
 // Pie de página rojo: categorías, enlaces legales, logo, redes sociales,
-// copyright y accesos discretos a /publicar y /admin para el equipo.
+// copyright y crédito de la agencia.
 // ============================================================================
 
 import Image from "next/image";
@@ -66,14 +66,14 @@ export function Footer() {
   return (
     <footer className="bg-n33-primary text-white">
       <div className="mx-auto max-w-[1440px] px-6 py-10 sm:py-12 lg:px-[170px]">
-        {/* Categorías */}
+        {/* Categorías: siempre en una sola línea, con scroll horizontal si no cabe */}
         <nav aria-label="Categorías del pie de página">
-          <ul className="flex flex-wrap gap-x-8 gap-y-3 sm:justify-between sm:gap-x-10">
+          <ul className="scrollbar-hide flex flex-nowrap gap-x-8 overflow-x-auto sm:gap-x-10">
             {footerNav.map((item) => (
-              <li key={item.label}>
+              <li key={item.label} className="shrink-0">
                 <Link
                   href={item.href}
-                  className="inline-block font-helvetica text-[17px] font-bold transition-all duration-300 hover:-translate-y-0.5 hover:underline hover:opacity-90 sm:text-[21.77px]"
+                  className="inline-block font-helvetica text-[17px] font-bold whitespace-nowrap transition-all duration-300 hover:-translate-y-0.5 hover:underline hover:opacity-90 sm:text-[21.77px]"
                 >
                   {item.label}
                 </Link>
@@ -160,22 +160,8 @@ export function Footer() {
           </p>
         </div>
 
-        {/* Accesos internos (redacción/administración) + crédito de la agencia */}
-        <div className="mt-2 flex items-center justify-between text-[11px]">
-          <span className="flex gap-4">
-            <Link
-              href="/publicar"
-              className="opacity-70 transition-opacity duration-300 hover:underline hover:opacity-100"
-            >
-              Redacción
-            </Link>
-            <Link
-              href="/admin"
-              className="opacity-70 transition-opacity duration-300 hover:underline hover:opacity-100"
-            >
-              Administración
-            </Link>
-          </span>
+        {/* Crédito de la agencia */}
+        <div className="mt-2 text-right text-[11px]">
           <a
             href="https://voltlabagency.com/"
             target="_blank"

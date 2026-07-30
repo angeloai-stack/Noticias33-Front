@@ -15,14 +15,6 @@ type Ad = {
   alt: string;
   /** Destino al hacer clic. */
   href: string;
-  /**
-   * "cover" (por defecto) rellena el espacio recortando la imagen si la
-   * proporción no coincide; "contain" la muestra completa, centrada, sin
-   * recortar (puede dejar franjas vacías si la proporción es muy distinta).
-   */
-  fit?: "cover" | "contain";
-  /** Fondo (clase Tailwind, ej. "bg-black") para las franjas que deja "contain". */
-  background?: string;
 };
 
 type AdPlaceholderProps = {
@@ -39,13 +31,13 @@ export function AdPlaceholder({ className = "", ad }: AdPlaceholderProps) {
         href={ad.href}
         target="_blank"
         rel="noopener noreferrer sponsored"
-        className={`group relative block overflow-hidden rounded-[12px] ${ad.background ?? ""} ${className}`}
+        className={`group relative block overflow-hidden rounded-[12px] ${className}`}
       >
         <Image
           src={ad.imageUrl}
           alt={ad.alt}
           fill
-          className={`${ad.fit === "contain" ? "object-contain" : "object-cover"} transition-transform duration-500 group-hover:scale-105`}
+          className="object-cover transition-transform duration-500 group-hover:scale-105"
         />
       </Link>
     );

@@ -2,7 +2,7 @@
 // Sitemap dinámico (/sitemap.xml). Incluye la portada, todas las categorías
 // y las últimas noticias con su fecha real de modificación, para que los
 // buscadores indexen el contenido nuevo rápidamente. Se regenera cada hora.
-// Las rutas internas (/publicar, /admin, /api) quedan fuera a propósito.
+// Las rutas internas (/api) quedan fuera a propósito.
 // ============================================================================
 
 import type { MetadataRoute } from "next";

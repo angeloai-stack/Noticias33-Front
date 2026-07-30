@@ -1,7 +1,8 @@
 // ============================================================================
 // Variables de entorno públicas (NEXT_PUBLIC_*) con valores por defecto.
-// Las variables privadas del servidor (WP_USER, SUPABASE_*, etc.) se leen
-// directamente en wp-admin.ts y supabase.ts para no exponerlas al cliente.
+// Las variables privadas del servidor (SUPABASE_*, REVALIDATE_SECRET, etc.)
+// se leen directamente donde se usan (ej. supabase.ts) para no exponerlas
+// al cliente.
 // ============================================================================
 
 /** Lanza un error claro si la variable obligatoria no está definida. */

@@ -6,14 +6,18 @@
 
 const OPEN_METEO_URL = "https://api.open-meteo.com/v1/forecast";
 
-/** Ciudades de Baja California mostradas en el widget de clima. */
+/**
+ * Ciudades de Baja California mostradas en el widget de clima. San Felipe va
+ * primero: es la ciudad por defecto (WeatherCard y el badge del nav usan la
+ * primera del arreglo hasta que la geolocalización por IP resuelve).
+ */
 const CITIES = [
+  { slug: "san-felipe", name: "San Felipe", lat: 31.0286, lon: -114.8347 },
   { slug: "tijuana", name: "Tijuana", lat: 32.5149, lon: -117.0382 },
   { slug: "mexicali", name: "Mexicali", lat: 32.6245, lon: -115.4523 },
   { slug: "ensenada", name: "Ensenada", lat: 31.8667, lon: -116.6 },
   { slug: "rosarito", name: "Rosarito", lat: 32.3667, lon: -117.05 },
   { slug: "tecate", name: "Tecate", lat: 32.5667, lon: -116.6333 },
-  { slug: "san-felipe", name: "San Felipe", lat: 31.0286, lon: -114.8347 },
   { slug: "san-quintin", name: "San Quintín", lat: 30.5586, lon: -115.9522 },
 ] as const;
 
@@ -142,13 +146,13 @@ function distanceKm(lat1: number, lon1: number, lat2: number, lon2: number) {
 
 /** Ciudad por defecto: la geolocalización por IP solo la desplaza si otra
  * ciudad queda claramente más cerca (ver DEFAULT_CITY_BIAS_KM). */
-const DEFAULT_CITY_SLUG = "tijuana";
+const DEFAULT_CITY_SLUG = "san-felipe";
 
 /**
  * Margen a favor de la ciudad por defecto. La geolocalización por IP suele
- * tener 10-50 km de error, y Tijuana y Rosarito están a solo ~16 km entre
- * sí: sin este margen, cualquier visitante de Tijuana con un poco de ruido
- * en su IP terminaba viendo el clima de Rosarito.
+ * tener 10-50 km de error, así que sin este margen un visitante de la ciudad
+ * por defecto con un poco de ruido en su IP podría terminar viendo el clima
+ * de la ciudad cubierta más cercana.
  */
 const DEFAULT_CITY_BIAS_KM = 12;
 

@@ -1,6 +1,6 @@
 # N33 — Noticias 33 Front-end
 
-Rediseño completo del front-end del noticiero **N33** (Noticias 33), construido con Next.js, React, TypeScript y Tailwind CSS a partir del diseño de Figma "N33 Mockup". Incluye el sitio público de noticias, el sistema interno de publicación para redactores y el panel de administración, todo en un solo proyecto.
+Rediseño completo del front-end del noticiero **N33** (Noticias 33), construido con Next.js, React, TypeScript y Tailwind CSS a partir del diseño de Figma "N33 Mockup". Es el sitio público de noticias; la publicación y administración de contenido se hacen directamente en el backend (WordPress) que este front consume.
 
 ## Stack
 
@@ -9,7 +9,7 @@ Rediseño completo del front-end del noticiero **N33** (Noticias 33), construido
 - **TypeScript**
 - **Tailwind CSS v4**
 - **WordPress REST API** como backend de contenidos (noticias33.com)
-- **Supabase** (vía API REST, sin dependencias) para logs de publicación y suscriptores del newsletter
+- **Supabase** (vía API REST, sin dependencias) para los suscriptores del newsletter
 
 ## Requisitos
 
@@ -32,15 +32,11 @@ Abre [http://localhost:3000](http://localhost:3000).
 | --- | --- | --- |
 | `NEXT_PUBLIC_SITE_URL` | Pública | URL pública del sitio |
 | `NEXT_PUBLIC_API_URL` | Pública | API REST de WordPress (por defecto `https://noticias33.com/wp-json/wp/v2`) |
-| `WP_URL` | Servidor | URL base de WordPress (publicación) |
-| `WP_USER` | Servidor | Usuario de WordPress con permisos de publicación |
-| `WP_APP_PASSWORD` | Servidor | Application Password de WordPress (wp-admin → Usuarios → Perfil) |
 | `SUPABASE_URL` | Servidor | URL del proyecto Supabase |
 | `SUPABASE_SERVICE_KEY` | Servidor | Service Role Key de Supabase (secreta, nunca en el cliente) |
-| `NEXT_PUBLIC_ACCESS_CODE` | Pública | Clave de acceso de redactores (`/publicar`) |
-| `NEXT_PUBLIC_ADMIN_CODE` | Pública | Clave de acceso de administradores (`/admin`) |
+| `REVALIDATE_SECRET` | Servidor | Secreto del webhook `/api/revalidate` |
 
-Las credenciales nunca se versionan: van en `.env.local` (desarrollo) y en las Environment Variables de Vercel (producción). Si Supabase no está configurado, el sitio funciona igual: solo el newsletter y el historial de `/admin` responden "servicio no disponible".
+Las credenciales nunca se versionan: van en `.env.local` (desarrollo) y en las Environment Variables de Vercel (producción). Si Supabase no está configurado, el sitio funciona igual: solo el newsletter responde "servicio no disponible".
 
 ## Estructura del proyecto
 
@@ -51,24 +47,17 @@ src/
 │   ├── noticia/[slug]/          # Detalle de noticia (ISR cada 5 min)
 │   ├── categoria/[slug]/        # Listado por categoría con paginación
 │   ├── buscar/                  # Búsqueda (?q=...)
-│   ├── publicar/                # Formulario de redactores (clave, noindex)
-│   ├── admin/                   # Historial y errores (clave, noindex)
 │   ├── sitemap.ts               # Sitemap dinámico (/sitemap.xml)
 │   ├── robots.ts                # robots.txt (bloquea rutas internas)
 │   ├── not-found.tsx            # Página 404
 │   └── api/                     # API internas (solo servidor)
-│       ├── categorias/          # GET  categorías para el formulario
-│       ├── media/               # POST sube imagen a WordPress
-│       ├── tags/                # GET  busca o crea un tag
-│       ├── publicar/            # POST crea la nota en WordPress
-│       ├── logs/                # GET  historial desde Supabase
+│       ├── geo/                 # GET  ciudad más cercana según IP (Vercel)
+│       ├── revalidate/          # POST/GET webhook de WordPress
 │       └── newsletter/          # POST alta de suscriptor en Supabase
 ├── components/
 │   ├── layout/                  # Header (mega-menú + ticker), Footer,
 │   │                            # Newsletter + formulario, SiteShell
 │   ├── news/                    # Tarjetas y secciones de la portada
-│   ├── publish/                 # AccessGate y formulario de publicación
-│   ├── admin/                   # Dashboard de administración
 │   ├── seo/                     # JsonLd (datos estructurados)
 │   └── ui/                      # Reveal (animación al hacer scroll)
 ├── lib/
@@ -77,13 +66,14 @@ src/
 │   │   ├── news.ts              # Capa de datos de noticias
 │   │   ├── mappers.ts           # WpPost → Article
 │   │   ├── wp-types.ts          # Tipos de la API de WordPress
-│   │   └── wp-admin.ts          # fetch autenticado (publicación)
+│   │   └── weather.ts           # Clima (Open-Meteo) + ciudad más cercana
 │   ├── config/
 │   │   ├── site.ts              # Identidad y navegación (menú/footer)
 │   │   └── env.ts               # Variables de entorno públicas
+│   ├── hooks/
+│   │   └── use-nearest-city.ts  # Ciudad más cercana según IP (cliente)
 │   ├── supabase.ts              # Cliente REST mínimo de Supabase
-│   ├── seo.ts                   # Constructores de esquemas schema.org
-│   └── log.ts                   # Registro de publicaciones
+│   └── seo.ts                   # Constructores de esquemas schema.org
 └── types/
     └── news.ts                  # Modelo de dominio (Article, Category...)
 ```
@@ -97,37 +87,17 @@ src/
 ## SEO
 
 - **Sitemap dinámico** (`/sitemap.xml`): portada, categorías y las últimas 100 noticias con su fecha real de modificación; se regenera cada hora.
-- **robots.txt** (`/robots.txt`): permite todo el sitio público, bloquea `/publicar`, `/admin` y `/api/`, y apunta al sitemap.
+- **robots.txt** (`/robots.txt`): permite todo el sitio público, bloquea `/api/`, y apunta al sitemap.
 - **Datos estructurados (JSON-LD)**: `NewsMediaOrganization` + `WebSite` con `SearchAction` en el layout (habilita el cuadro de búsqueda en Google), `NewsArticle` en cada noticia y `CollectionPage`/`ItemList` en las categorías. Los constructores viven en `src/lib/seo.ts`.
-- **Metadatos**: títulos con plantilla, descripciones y Open Graph por noticia; `/publicar` y `/admin` llevan `noindex`.
+- **Metadatos**: títulos con plantilla, descripciones y Open Graph por noticia.
 
 Valida los esquemas con la [prueba de resultados enriquecidos](https://search.google.com/test/rich-results) de Google.
 
-## Sistema de publicación
+## Newsletter
 
-Migrado desde el repo original `fherrera-voltlab/N33` (Next 13.5) a este proyecto:
-
-- **`/publicar`** — protegido por clave de redactores. Formulario con: imagen destacada (arrastrar y soltar + vista previa), título, subtítulo, categoría (cargada en vivo desde WordPress), tags tipo chips (Enter agrega) y editor de cuerpo con barra flotante de formato (negrita, itálica, cita, enlace). Flujo de publicación: sube imagen → resuelve tags → crea el post publicado; muestra el progreso y al final el enlace a la nota.
-- **`/admin`** — protegido por clave de administrador. Pestañas de Publicaciones y Errores con filtro por rango de fechas; lee la tabla `publicaciones_log` de Supabase, donde cada intento de publicación deja registro automático.
-- Las credenciales de WordPress solo viven en el servidor (API routes); el navegador nunca las ve.
-
-### Tablas de Supabase
+El formulario del bloque azul (presente en todas las páginas) envía a `POST /api/newsletter`, que valida los datos y guarda el suscriptor en la tabla `suscriptores` de Supabase. El índice único sobre el correo evita duplicados (el usuario ve "Este correo ya está suscrito").
 
 ```sql
--- Logs de publicación (ya existe en el proyecto N33)
-create table publicaciones_log (
-  id uuid primary key default gen_random_uuid(),
-  created_at timestamptz default now(),
-  status text not null check (status in ('success', 'error')),
-  title text,
-  wp_url text,
-  error_message text,
-  error_step text
-);
-create index idx_publicaciones_created_at on publicaciones_log (created_at desc);
-create index idx_publicaciones_status on publicaciones_log (status);
-
--- Suscriptores del newsletter
 create table suscriptores (
   id uuid primary key default gen_random_uuid(),
   created_at timestamptz default now(),
@@ -138,10 +108,6 @@ create table suscriptores (
 create index idx_suscriptores_created_at on suscriptores (created_at desc);
 alter table suscriptores enable row level security;
 ```
-
-## Newsletter
-
-El formulario del bloque azul (presente en todas las páginas) envía a `POST /api/newsletter`, que valida los datos y guarda el suscriptor en la tabla `suscriptores`. El índice único sobre el correo evita duplicados (el usuario ve "Este correo ya está suscrito").
 
 ## Integración con el backend
 
@@ -155,11 +121,7 @@ El backend es el WordPress existente de [noticias33.com](https://noticias33.com)
 - `GET /posts?search=...&_embed` — búsqueda
 - `GET /categories` — categorías
 
-**Escritura** (`src/lib/api/wp-admin.ts`, HTTP Basic con Application Password, solo desde API routes):
-
-- `POST /media` — subir imagen destacada
-- `GET/POST /tags` — buscar o crear tags
-- `POST /posts` — publicar la nota
+La publicación y administración de contenido (crear/editar notas, medios, categorías, tags) se hace directamente en wp-admin de WordPress; este proyecto es solo de lectura.
 
 Los posts de WordPress se mapean al tipo `Article` en `src/lib/api/mappers.ts`; la paginación usa los headers `X-WP-Total` y `X-WP-TotalPages`.
 
@@ -193,11 +155,6 @@ Pruebas unitarias con [Vitest](https://vitest.dev) centradas en la lógica pura 
 npm run test        # una sola pasada
 npm run test:watch  # re-ejecuta al guardar
 ```
-
-## Seguridad
-
-- Las claves de `/publicar` y `/admin` son un filtro ligero (viajan en el bundle como `NEXT_PUBLIC_*`), igual que en el sistema original; para seguridad real conviene migrar a autenticación de sesión.
-- La Application Password de WordPress apareció en texto plano en la documentación técnica: se recomienda regenerarla en wp-admin y actualizar `.env.local` y Vercel.
 
 ## Próximos pasos
 

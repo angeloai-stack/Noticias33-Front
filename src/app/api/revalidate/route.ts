@@ -1,8 +1,7 @@
 // ============================================================================
 // POST /api/revalidate
 // Webhook para que WordPress avise al front cuando se publica o edita una
-// noticia directamente desde wp-admin (fuera del flujo de /publicar de esta
-// app). Invalida el caché de portada, categorías y noticias.
+// noticia. Invalida el caché de portada, categorías y noticias.
 // Protegido con REVALIDATE_SECRET (?secret=... o header Authorization: Bearer).
 // ============================================================================
 
