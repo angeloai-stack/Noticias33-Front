@@ -8,8 +8,10 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { AdPlaceholder } from "@/components/news/ad-placeholder";
 import { JsonLd } from "@/components/seo/json-ld";
 import { getArticleBySlug } from "@/lib/api/news";
+import { ADS } from "@/lib/config/ads";
 import { newsArticleJsonLd } from "@/lib/seo";
 
 // El contenido de una nota rara vez cambia: se regenera cada 5 minutos
@@ -103,6 +105,15 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
       ) : (
         <p className="mt-8 text-base leading-8">{article.excerpt}</p>
       )}
+
+      {/* Publicidad, tras el cuerpo de la noticia */}
+      <div className="mt-10 flex justify-center">
+        <AdPlaceholder
+          className="h-[100px] w-full sm:h-[145px]"
+          ad={ADS.propertyDreamz}
+          sizes="(min-width: 768px) 768px, 100vw"
+        />
+      </div>
     </article>
   );
 }

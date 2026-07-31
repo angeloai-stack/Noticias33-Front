@@ -5,8 +5,10 @@
 // ============================================================================
 
 import type { Metadata } from "next";
+import { AdPlaceholder } from "@/components/news/ad-placeholder";
 import { ArticleCard } from "@/components/news/article-card";
 import { searchArticles } from "@/lib/api/news";
+import { ADS } from "@/lib/config/ads";
 
 export const metadata: Metadata = {
   title: "Buscar",
@@ -61,11 +63,24 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
 
           {results.data.length > 0 && (
             <div className="mt-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-              {results.data.map((article) => (
-                <ArticleCard key={article.id} article={article} />
+              {results.data.map((article, index) => (
+                <ArticleCard
+                  key={article.id}
+                  article={article}
+                  priority={index === 0}
+                />
               ))}
             </div>
           )}
+
+          {/* Publicidad, tras los resultados */}
+          <div className="mt-10 flex justify-center">
+            <AdPlaceholder
+              className="h-[100px] w-full max-w-[1034px] sm:h-[145px]"
+              ad={ADS.propertyDreamz}
+              sizes="(min-width: 1034px) 1034px, 100vw"
+            />
+          </div>
         </section>
       )}
     </div>

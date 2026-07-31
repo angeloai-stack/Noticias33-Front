@@ -6,9 +6,11 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { AdPlaceholder } from "@/components/news/ad-placeholder";
 import { ArticleCard } from "@/components/news/article-card";
 import { JsonLd } from "@/components/seo/json-ld";
 import { getArticlesByCategory, getCategoryBySlug } from "@/lib/api/news";
+import { ADS } from "@/lib/config/ads";
 import { siteConfig } from "@/lib/config/site";
 import { categoryJsonLd } from "@/lib/seo";
 
@@ -73,8 +75,12 @@ export default async function CategoryPage({
 
       {articles.length > 0 ? (
         <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {articles.map((article) => (
-            <ArticleCard key={article.id} article={article} />
+          {articles.map((article, index) => (
+            <ArticleCard
+              key={article.id}
+              article={article}
+              priority={index === 0}
+            />
           ))}
         </div>
       ) : (
@@ -82,6 +88,15 @@ export default async function CategoryPage({
           No hay noticias en esta categoría todavía.
         </p>
       )}
+
+      {/* Publicidad, tras el listado */}
+      <div className="mt-10 flex justify-center">
+        <AdPlaceholder
+          className="h-[100px] w-full max-w-[1034px] sm:h-[145px]"
+          ad={ADS.propertyDreamz}
+          sizes="(min-width: 1034px) 1034px, 100vw"
+        />
+      </div>
 
       {meta.totalPages > 1 && (
         <nav

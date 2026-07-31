@@ -10,6 +10,8 @@ import type { Article } from "@/types/news";
 
 type ArticleCardProps = {
   article: Article;
+  /** Marca la imagen como LCP: úsalo solo en la primera tarjeta del listado. */
+  priority?: boolean;
 };
 
 /** Fecha en formato largo: "20 de julio de 2026". */
@@ -22,7 +24,7 @@ function formatDate(date: string) {
 }
 
 /** Tarjeta vertical para listados de categoría y búsqueda. */
-export function ArticleCard({ article }: ArticleCardProps) {
+export function ArticleCard({ article, priority = false }: ArticleCardProps) {
   return (
     <article className="group rounded-[14px] p-2 transition-all duration-300 hover:-translate-y-1.5 hover:bg-white hover:shadow-[0_18px_40px_-16px_rgba(31,95,170,0.35)]">
       <Link
@@ -34,6 +36,7 @@ export function ArticleCard({ article }: ArticleCardProps) {
             src={article.coverImageUrl}
             alt={article.title}
             fill
+            priority={priority}
             className="object-cover transition-transform duration-500 ease-out group-hover:scale-110"
             sizes="(max-width: 768px) 100vw, 33vw"
           />

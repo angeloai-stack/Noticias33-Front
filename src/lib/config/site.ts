@@ -33,8 +33,10 @@ function search(term: string): string {
 }
 
 // Menú principal con subcategorías según el diseño de Figma (nodo 48:130).
-// Las categorías "Estatal" y "EE.UU" no existen en el backend, por lo que
-// apuntan a las más cercanas; las subcategorías enlazan a la búsqueda.
+// Las categorías "Estatal" y "EE.UU" no existen en el backend: "Estatal"
+// apunta a la más cercana (Gobierno) y "EE.UU" a una búsqueda filtrada por
+// "Estados Unidos" en vez de mezclarse con todo lo internacional (Global).
+// Las subcategorías de ambas enlazan a la búsqueda.
 export const mainNav: NavItem[] = [
   {
     label: "Editorial",
@@ -70,7 +72,7 @@ export const mainNav: NavItem[] = [
   },
   {
     label: "EE.UU",
-    href: "/categoria/global",
+    href: search("Estados Unidos"),
     children: [
       { label: "Política", href: search("política Estados Unidos") },
       { label: "Economía", href: search("economía Estados Unidos") },

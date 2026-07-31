@@ -29,24 +29,6 @@ function formatToday() {
   return cleaned.charAt(0).toUpperCase() + cleaned.slice(1);
 }
 
-type ToggleCircleProps = {
-  expanded: boolean;
-};
-
-/** Botón circular del menú: azul con "+" (plegado) o rojo con "×" (desplegado). */
-function ToggleCircle({ expanded }: ToggleCircleProps) {
-  return (
-    <span
-      aria-hidden="true"
-      className={`flex size-[20px] shrink-0 items-center justify-center rounded-full text-[15px] font-bold leading-none text-white transition-all duration-300 ${
-        expanded ? "rotate-[135deg] bg-n33-primary" : "rotate-0 bg-n33-tag"
-      }`}
-    >
-      +
-    </span>
-  );
-}
-
 /**
  * Formulario de búsqueda que envía a /buscar?q=...
  * Recibe un id único porque se renderiza dos veces (escritorio y móvil).
@@ -101,11 +83,9 @@ type HeaderProps = {
 };
 
 export function Header({ headline, weather }: HeaderProps) {
-  // Mega-menú de escritorio (Figma: "Menú plegado" / "desplegado")
-  const [expanded, setExpanded] = useState(false);
-  // Menú móvil tipo acordeón
+  // Menú móvil (lista plana; el desplegable de subcategorías está
+  // desactivado por ahora, ver mainNav en site.ts)
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [openSection, setOpenSection] = useState<string | null>(null);
 
   // Ciudad más cercana a quien visita (según su IP); Tijuana hasta resolver.
   const nearestSlug = useNearestCitySlug();
@@ -206,127 +186,45 @@ export function Header({ headline, weather }: HeaderProps) {
           </div>
         </div>
 
-        {/* Menú de categorías — escritorio (mega-menú plegado/desplegado) */}
+        {/* Menú de categorías — escritorio (solo categorías principales por ahora) */}
         <nav
           aria-label="Categorías"
-          className="relative hidden bg-white/90 shadow-[0px_4px_12px_0px_rgba(0,0,0,0.18)] backdrop-blur-md lg:block"
+          className="hidden bg-white/90 shadow-[0px_4px_12px_0px_rgba(0,0,0,0.18)] backdrop-blur-md lg:block"
         >
           <div className="mx-auto max-w-[1440px] px-6 lg:px-12">
-            <div className="flex h-[57px] items-center gap-6">
-              <button
-                type="button"
-                aria-label={expanded ? "Plegar menú" : "Desplegar menú"}
-                aria-expanded={expanded}
-                onClick={() => setExpanded((open) => !open)}
-                className="cursor-pointer transition-transform duration-200 hover:scale-110 active:scale-90"
-              >
-                <ToggleCircle expanded={expanded} />
-              </button>
-
-              <ul className="grid flex-1 grid-cols-10 items-center gap-x-6 whitespace-nowrap">
-                {mainNav.map((item) => (
-                  <li key={item.label} className="min-w-0">
-                    <Link
-                      href={item.href}
-                      className="relative inline-block font-helvetica text-[21.77px] font-bold text-n33-blue transition-colors duration-300 after:absolute after:-bottom-1 after:left-0 after:h-[2.5px] after:w-full after:origin-left after:scale-x-0 after:bg-n33-primary after:transition-transform after:duration-300 hover:text-n33-primary hover:after:scale-x-100"
-                    >
-                      {item.label}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
+            <ul className="flex h-[57px] items-center justify-between gap-6 whitespace-nowrap">
+              {mainNav.map((item) => (
+                <li key={item.label} className="min-w-0">
+                  <Link
+                    href={item.href}
+                    className="relative inline-block font-helvetica text-[21.77px] font-bold text-n33-blue transition-colors duration-300 after:absolute after:-bottom-1 after:left-0 after:h-[2.5px] after:w-full after:origin-left after:scale-x-0 after:bg-n33-primary after:transition-transform after:duration-300 hover:text-n33-primary hover:after:scale-x-100"
+                  >
+                    {item.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
           </div>
-
-          {/* Panel desplegado: columnas de subcategorías */}
-          {expanded && (
-            <div className="animate-menu-down absolute inset-x-0 top-full bg-white/95 shadow-[0px_18px_30px_-12px_rgba(0,0,0,0.3)] backdrop-blur-md">
-              <div className="mx-auto max-w-[1440px] px-6 lg:px-12">
-                <div className="flex gap-x-6 pb-10 pt-6">
-                  <span aria-hidden="true" className="w-[20px] shrink-0" />
-                  <div className="grid flex-1 grid-cols-10 gap-x-6">
-                    {mainNav.map((item) => (
-                      <ul key={item.label} className="flex flex-col gap-[26px]">
-                        {item.children.map((child) => (
-                          <li key={child.label}>
-                            <Link
-                              href={child.href}
-                              onClick={() => setExpanded(false)}
-                              className="font-helvetica text-[18px] leading-normal text-n33-blue transition-all duration-200 hover:translate-x-1 hover:text-n33-primary"
-                            >
-                              {child.label}
-                            </Link>
-                          </li>
-                        ))}
-                      </ul>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
         </nav>
 
-        {/* Menú de categorías — móvil (acordeón) */}
+        {/* Menú de categorías — móvil (solo categorías principales por ahora) */}
         {mobileOpen && (
           <nav
             aria-label="Categorías"
             className="animate-menu-down absolute inset-x-0 top-full max-h-[calc(100vh-90px)] overflow-y-auto bg-white/95 shadow-[0px_18px_30px_-12px_rgba(0,0,0,0.3)] backdrop-blur-md lg:hidden"
           >
             <ul className="divide-y divide-n33-border">
-              {mainNav.map((item) => {
-                const isOpen = openSection === item.label;
-                return (
-                  <li key={item.label}>
-                    <div className="flex items-center justify-between px-4">
-                      <Link
-                        href={item.href}
-                        onClick={() => setMobileOpen(false)}
-                        className="flex-1 py-3.5 font-helvetica text-[18px] font-bold text-n33-blue transition-colors duration-200 active:text-n33-primary"
-                      >
-                        {item.label}
-                      </Link>
-                      <button
-                        type="button"
-                        aria-label={
-                          isOpen
-                            ? `Cerrar subcategorías de ${item.label}`
-                            : `Abrir subcategorías de ${item.label}`
-                        }
-                        aria-expanded={isOpen}
-                        onClick={() =>
-                          setOpenSection(isOpen ? null : item.label)
-                        }
-                        className="cursor-pointer p-3 transition-transform duration-200 active:scale-90"
-                      >
-                        <ToggleCircle expanded={isOpen} />
-                      </button>
-                    </div>
-
-                    <div
-                      className={`grid transition-[grid-template-rows] duration-300 ease-out ${
-                        isOpen ? "grid-rows-[1fr]" : "grid-rows-[0fr]"
-                      }`}
-                    >
-                      <div className="overflow-hidden bg-n33-background">
-                        <ul className="flex flex-col gap-1 px-6 py-3">
-                          {item.children.map((child) => (
-                            <li key={child.label}>
-                              <Link
-                                href={child.href}
-                                onClick={() => setMobileOpen(false)}
-                                className="block py-1.5 font-helvetica text-[16px] text-n33-blue transition-colors duration-200 active:text-n33-primary"
-                              >
-                                {child.label}
-                              </Link>
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-                    </div>
-                  </li>
-                );
-              })}
+              {mainNav.map((item) => (
+                <li key={item.label}>
+                  <Link
+                    href={item.href}
+                    onClick={() => setMobileOpen(false)}
+                    className="block px-4 py-3.5 font-helvetica text-[18px] font-bold text-n33-blue transition-colors duration-200 active:text-n33-primary"
+                  >
+                    {item.label}
+                  </Link>
+                </li>
+              ))}
             </ul>
           </nav>
         )}

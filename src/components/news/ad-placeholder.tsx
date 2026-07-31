@@ -22,9 +22,18 @@ type AdPlaceholderProps = {
   className?: string;
   /** Anuncio a mostrar; si se omite, se ve el marcador de posición. */
   ad?: Ad;
+  /**
+   * Ancho real del hueco en el viewport, para que next/image pida la imagen
+   * al tamaño correcto en vez del de página completa (ver `className`).
+   */
+  sizes?: string;
 };
 
-export function AdPlaceholder({ className = "", ad }: AdPlaceholderProps) {
+export function AdPlaceholder({
+  className = "",
+  ad,
+  sizes = "100vw",
+}: AdPlaceholderProps) {
   if (ad) {
     return (
       <Link
@@ -37,6 +46,7 @@ export function AdPlaceholder({ className = "", ad }: AdPlaceholderProps) {
           src={ad.imageUrl}
           alt={ad.alt}
           fill
+          sizes={sizes}
           className="object-cover transition-transform duration-500 group-hover:scale-105"
         />
       </Link>

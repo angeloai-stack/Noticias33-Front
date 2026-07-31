@@ -17,35 +17,12 @@ import { NewsRowCard } from "@/components/news/news-row-card";
 import { ReelsCard } from "@/components/news/reels-card";
 import { WeatherCard } from "@/components/news/weather-card";
 import { Reveal } from "@/components/ui/reveal";
+import { ADS } from "@/lib/config/ads";
 import { getLatestArticles } from "@/lib/api/news";
 import { getWeatherForCities } from "@/lib/api/weather";
 
 // Regenera la portada como máximo cada 60 segundos (ISR)
 export const revalidate = 60;
-
-// Enlace de contacto directo (WhatsApp) del anunciante Volt Lab Agency.
-const VOLTLAB_WHATSAPP = "https://wa.me/526647089550";
-
-// Anuncios reales colocados en los espacios publicitarios. Cada imagen se
-// eligió porque su proporción coincide con el hueco al que va (evita
-// recortes feos con object-cover).
-const ADS = {
-  voltlabRail: {
-    imageUrl: "/ads/voltlab-rail.jpg",
-    alt: "Volt Lab Agency: publicidad, branding, sitios web, contenido, IA y automatización",
-    href: VOLTLAB_WHATSAPP,
-  },
-  voltlabSidebar: {
-    imageUrl: "/ads/voltlab-sidebar.jpg",
-    alt: "Volt Lab Agency: agenda una asesoría sin costo",
-    href: VOLTLAB_WHATSAPP,
-  },
-  propertyDreamz: {
-    imageUrl: "/ads/property-dreamz-banner.jpg",
-    alt: "Property Dreamz Realty Group: casas, terrenos, departamentos, comercial e inversión",
-    href: "https://www.propertydreamz.com",
-  },
-} as const;
 
 export default async function HomePage() {
   // Ambas peticiones en paralelo para no sumar latencias
@@ -78,8 +55,16 @@ export default async function HomePage() {
           aria-label="Publicidad"
           className="hidden w-[116px] shrink-0 flex-col gap-9 xl:flex"
         >
-          <AdPlaceholder className="h-[279px]" ad={ADS.voltlabRail} />
-          <AdPlaceholder className="h-[279px]" ad={ADS.voltlabRail} />
+          <AdPlaceholder
+            className="h-[279px]"
+            ad={ADS.voltlabRail}
+            sizes="116px"
+          />
+          <AdPlaceholder
+            className="h-[279px]"
+            ad={ADS.voltlabRail}
+            sizes="116px"
+          />
         </aside>
 
         {/* Columna principal */}
@@ -118,13 +103,13 @@ export default async function HomePage() {
             </div>
           )}
 
-          {/* Reels y clima en flujo móvil */}
+          {/* Clima y Reels en flujo móvil */}
           <div className="mt-12 flex flex-col items-center gap-12 sm:flex-row sm:items-start sm:justify-center lg:hidden">
             <Reveal>
-              <ReelsCard />
+              <WeatherCard cities={weatherCities} />
             </Reveal>
             <Reveal delay={120}>
-              <WeatherCard cities={weatherCities} />
+              <ReelsCard />
             </Reveal>
           </div>
         </div>
@@ -132,13 +117,21 @@ export default async function HomePage() {
         {/* Barra lateral derecha */}
         <aside className="hidden w-[286px] shrink-0 flex-col gap-10 lg:flex">
           <Reveal>
-            <ReelsCard />
-          </Reveal>
-          <Reveal delay={120}>
             <WeatherCard cities={weatherCities} />
           </Reveal>
-          <AdPlaceholder className="h-[368px] w-[253px]" ad={ADS.voltlabSidebar} />
-          <AdPlaceholder className="h-[368px] w-[253px]" ad={ADS.voltlabSidebar} />
+          <Reveal delay={120}>
+            <ReelsCard />
+          </Reveal>
+          <AdPlaceholder
+            className="h-[368px] w-[253px]"
+            ad={ADS.voltlabSidebar}
+            sizes="253px"
+          />
+          <AdPlaceholder
+            className="h-[368px] w-[253px]"
+            ad={ADS.voltlabSidebar}
+            sizes="253px"
+          />
         </aside>
       </div>
 
@@ -147,6 +140,7 @@ export default async function HomePage() {
         <AdPlaceholder
           className="h-[100px] w-full max-w-[1034px] sm:h-[145px]"
           ad={ADS.propertyDreamz}
+          sizes="(min-width: 1034px) 1034px, 100vw"
         />
       </div>
 
@@ -160,6 +154,7 @@ export default async function HomePage() {
         <AdPlaceholder
           className="h-[100px] w-full max-w-[1034px] sm:h-[145px]"
           ad={ADS.propertyDreamz}
+          sizes="(min-width: 1034px) 1034px, 100vw"
         />
       </div>
     </div>
