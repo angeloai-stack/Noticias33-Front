@@ -103,7 +103,7 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
           dangerouslySetInnerHTML={{ __html: article.content }}
         />
       ) : (
-        <p className="mt-8 text-base leading-8">{article.excerpt}</p>
+        <p className="mt-8 text-base leading-8 text-justify">{article.excerpt}</p>
       )}
 
       {/* Publicidad, tras el cuerpo de la noticia */}
