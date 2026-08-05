@@ -47,16 +47,17 @@ export const mainNav: NavItem[] = [
     ],
   },
   {
+    // Children: los 6 municipios de Baja California (únicamente municipios,
+    // no localidades como San Felipe que pertenecen a un municipio existente).
     label: "Estatal",
     href: "/categoria/gobierno",
     children: [
       { label: "Tijuana", href: search("Tijuana") },
-      { label: "Rosarito", href: search("Rosarito") },
-      { label: "Ensenada", href: search("Ensenada") },
-      { label: "San Quintín", href: search("San Quintín") },
-      { label: "Tecate", href: search("Tecate") },
       { label: "Mexicali", href: search("Mexicali") },
-      { label: "San Felipe", href: search("San Felipe") },
+      { label: "Ensenada", href: search("Ensenada") },
+      { label: "Playas de Rosarito", href: search("Rosarito") },
+      { label: "Tecate", href: search("Tecate") },
+      { label: "San Quintín", href: search("San Quintín") },
     ],
   },
   {

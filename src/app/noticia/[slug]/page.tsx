@@ -107,9 +107,17 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
       )}
 
       {/* Publicidad, tras el cuerpo de la noticia */}
-      <div className="mt-10 flex justify-center">
+      <div className="mt-10 flex flex-wrap items-center justify-center gap-6">
+        <AdPlaceholder className="h-69.75 w-29" ad={ADS.voltlabRail} sizes="116px" />
         <AdPlaceholder
-          className="h-[100px] w-full sm:h-[145px]"
+          className="h-92 w-63.25"
+          ad={ADS.voltlabSidebar}
+          sizes="253px"
+        />
+      </div>
+      <div className="mt-6 flex justify-center">
+        <AdPlaceholder
+          className="aspect-1034/145 w-full"
           ad={ADS.propertyDreamz}
           sizes="(min-width: 768px) 768px, 100vw"
         />

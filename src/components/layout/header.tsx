@@ -87,10 +87,18 @@ export function Header({ headline, weather }: HeaderProps) {
   // desactivado por ahora, ver mainNav en site.ts)
   const [mobileOpen, setMobileOpen] = useState(false);
 
+  // Dropdown de "Estatal" (municipios de Baja California): abierto con hover
+  // en escritorio, como acordeón en móvil. El resto del menú sigue plano.
+  const [estatalOpenDesktop, setEstatalOpenDesktop] = useState(false);
+  const [estatalOpenMobile, setEstatalOpenMobile] = useState(false);
+
   // Ciudad más cercana a quien visita (según su IP); Tijuana hasta resolver.
   const nearestSlug = useNearestCitySlug();
   const activeWeather = useMemo(
-    () => weather.find((city) => city.slug === nearestSlug) ?? weather[0],
+    () =>
+      weather.find((city) => city.slug === nearestSlug) ??
+      weather.find((city) => city.slug === "tijuana") ??
+      weather[0],
     [weather, nearestSlug],
   );
 
@@ -193,16 +201,45 @@ export function Header({ headline, weather }: HeaderProps) {
         >
           <div className="mx-auto max-w-[1440px] px-6 lg:px-12">
             <ul className="flex h-[57px] items-center justify-between gap-6 whitespace-nowrap">
-              {mainNav.map((item) => (
-                <li key={item.label} className="min-w-0">
-                  <Link
-                    href={item.href}
-                    className="relative inline-block font-helvetica text-[21.77px] font-bold text-n33-blue transition-colors duration-300 after:absolute after:-bottom-1 after:left-0 after:h-[2.5px] after:w-full after:origin-left after:scale-x-0 after:bg-n33-primary after:transition-transform after:duration-300 hover:text-n33-primary hover:after:scale-x-100"
+              {mainNav.map((item) => {
+                const isEstatal = item.label === "Estatal";
+                return (
+                  <li
+                    key={item.label}
+                    className={isEstatal ? "relative min-w-0" : "min-w-0"}
+                    onMouseEnter={
+                      isEstatal ? () => setEstatalOpenDesktop(true) : undefined
+                    }
+                    onMouseLeave={
+                      isEstatal ? () => setEstatalOpenDesktop(false) : undefined
+                    }
                   >
-                    {item.label}
-                  </Link>
-                </li>
-              ))}
+                    <Link
+                      href={item.href}
+                      aria-haspopup={isEstatal ? "true" : undefined}
+                      aria-expanded={isEstatal ? estatalOpenDesktop : undefined}
+                      className="relative inline-block font-helvetica text-[21.77px] font-bold text-n33-blue transition-colors duration-300 after:absolute after:-bottom-1 after:left-0 after:h-[2.5px] after:w-full after:origin-left after:scale-x-0 after:bg-n33-primary after:transition-transform after:duration-300 hover:text-n33-primary hover:after:scale-x-100"
+                    >
+                      {item.label}
+                    </Link>
+
+                    {isEstatal && estatalOpenDesktop && (
+                      <ul className="animate-menu-down absolute left-0 top-full z-10 mt-2 min-w-55 rounded-[10px] bg-white/95 py-2 shadow-[0px_18px_30px_-12px_rgba(0,0,0,0.3)] backdrop-blur-md">
+                        {item.children.map((child) => (
+                          <li key={child.label}>
+                            <Link
+                              href={child.href}
+                              className="block whitespace-nowrap px-4 py-2 font-helvetica text-[16px] font-semibold text-n33-blue transition-colors duration-200 hover:bg-n33-background hover:text-n33-primary"
+                            >
+                              {child.label}
+                            </Link>
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+                  </li>
+                );
+              })}
             </ul>
           </div>
         </nav>
@@ -214,17 +251,58 @@ export function Header({ headline, weather }: HeaderProps) {
             className="animate-menu-down absolute inset-x-0 top-full max-h-[calc(100vh-90px)] overflow-y-auto bg-white/95 shadow-[0px_18px_30px_-12px_rgba(0,0,0,0.3)] backdrop-blur-md lg:hidden"
           >
             <ul className="divide-y divide-n33-border">
-              {mainNav.map((item) => (
-                <li key={item.label}>
-                  <Link
-                    href={item.href}
-                    onClick={() => setMobileOpen(false)}
-                    className="block px-4 py-3.5 font-helvetica text-[18px] font-bold text-n33-blue transition-colors duration-200 active:text-n33-primary"
-                  >
-                    {item.label}
-                  </Link>
-                </li>
-              ))}
+              {mainNav.map((item) => {
+                const isEstatal = item.label === "Estatal";
+
+                if (!isEstatal) {
+                  return (
+                    <li key={item.label}>
+                      <Link
+                        href={item.href}
+                        onClick={() => setMobileOpen(false)}
+                        className="block px-4 py-3.5 font-helvetica text-[18px] font-bold text-n33-blue transition-colors duration-200 active:text-n33-primary"
+                      >
+                        {item.label}
+                      </Link>
+                    </li>
+                  );
+                }
+
+                return (
+                  <li key={item.label}>
+                    <button
+                      type="button"
+                      aria-expanded={estatalOpenMobile}
+                      onClick={() => setEstatalOpenMobile((open) => !open)}
+                      className="flex w-full items-center justify-between px-4 py-3.5 font-helvetica text-[18px] font-bold text-n33-blue transition-colors duration-200 active:text-n33-primary"
+                    >
+                      {item.label}
+                      <span
+                        aria-hidden="true"
+                        className={`text-[14px] transition-transform duration-200 ${estatalOpenMobile ? "rotate-180" : ""}`}
+                      >
+                        ▾
+                      </span>
+                    </button>
+
+                    {estatalOpenMobile && (
+                      <ul className="bg-n33-background/60 pb-2">
+                        {item.children.map((child) => (
+                          <li key={child.label}>
+                            <Link
+                              href={child.href}
+                              onClick={() => setMobileOpen(false)}
+                              className="block px-8 py-2.5 font-helvetica text-[16px] font-semibold text-n33-blue transition-colors duration-200 active:text-n33-primary"
+                            >
+                              {child.label}
+                            </Link>
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+                  </li>
+                );
+              })}
             </ul>
           </nav>
         )}

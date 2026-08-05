@@ -7,13 +7,13 @@
 const OPEN_METEO_URL = "https://api.open-meteo.com/v1/forecast";
 
 /**
- * Ciudades de Baja California mostradas en el widget de clima. San Felipe va
+ * Ciudades de Baja California mostradas en el widget de clima. Tijuana va
  * primero: es la ciudad por defecto (WeatherCard y el badge del nav usan la
  * primera del arreglo hasta que la geolocalización por IP resuelve).
  */
 const CITIES = [
-  { slug: "san-felipe", name: "San Felipe", lat: 31.0286, lon: -114.8347 },
   { slug: "tijuana", name: "Tijuana", lat: 32.5149, lon: -117.0382 },
+  { slug: "san-felipe", name: "San Felipe", lat: 31.0286, lon: -114.8347 },
   { slug: "mexicali", name: "Mexicali", lat: 32.6245, lon: -115.4523 },
   { slug: "ensenada", name: "Ensenada", lat: 31.8667, lon: -116.6 },
   { slug: "rosarito", name: "Rosarito", lat: 32.3667, lon: -117.05 },
@@ -146,7 +146,7 @@ function distanceKm(lat1: number, lon1: number, lat2: number, lon2: number) {
 
 /** Ciudad por defecto: la geolocalización por IP solo la desplaza si otra
  * ciudad queda claramente más cerca (ver DEFAULT_CITY_BIAS_KM). */
-const DEFAULT_CITY_SLUG = "san-felipe";
+const DEFAULT_CITY_SLUG = "tijuana";
 
 /**
  * Margen a favor de la ciudad por defecto. La geolocalización por IP suele

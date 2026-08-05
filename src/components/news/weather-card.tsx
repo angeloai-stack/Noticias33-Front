@@ -51,7 +51,9 @@ function buildWindyEmbedUrl(lat: number, lon: number): string {
 }
 
 export function WeatherCard({ cities }: WeatherCardProps) {
-  const [selectedSlug, setSelectedSlug] = useState(cities[0]?.slug ?? "");
+  const [selectedSlug, setSelectedSlug] = useState(
+    cities.find((city) => city.slug === "tijuana")?.slug ?? cities[0]?.slug ?? "",
+  );
   const hasUserSelected = useRef(false);
   const nearestSlug = useNearestCitySlug();
 
@@ -73,7 +75,10 @@ export function WeatherCard({ cities }: WeatherCardProps) {
   }
 
   const selected = useMemo(
-    () => cities.find((city) => city.slug === selectedSlug) ?? cities[0],
+    () =>
+      cities.find((city) => city.slug === selectedSlug) ??
+      cities.find((city) => city.slug === "tijuana") ??
+      cities[0],
     [cities, selectedSlug],
   );
 
@@ -111,7 +116,7 @@ export function WeatherCard({ cities }: WeatherCardProps) {
       </div>
 
       {/* Mapa de temperatura en vivo (Windy.com), centrado en la ciudad elegida */}
-      <div className="relative mt-3 h-[220px] w-full overflow-hidden rounded-[14px] shadow-[0_16px_35px_-18px_rgba(0,0,0,0.35)]">
+      <div className="relative mt-3 h-85 w-full overflow-hidden rounded-[14px] shadow-[0_16px_35px_-18px_rgba(0,0,0,0.35)]">
         <iframe
           key={selected.slug}
           src={buildWindyEmbedUrl(selected.lat, selected.lon)}

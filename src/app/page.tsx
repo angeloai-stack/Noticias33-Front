@@ -48,6 +48,15 @@ export default async function HomePage() {
 
   return (
     <div className="mx-auto max-w-[1440px] px-4 py-6 sm:px-6 sm:py-8 lg:px-10">
+      {/* Publicidad horizontal, justo debajo de la navegación */}
+      <div className="mb-10 flex justify-center lg:mb-16">
+        <AdPlaceholder
+          className="aspect-1034/145 w-full max-w-258.5"
+          ad={ADS.propertyDreamz}
+          sizes="(min-width: 1034px) 1034px, 100vw"
+        />
+      </div>
+
       {/* Zona superior: rail de publicidad, contenido y barra lateral */}
       <div className="flex gap-8">
         {/* Rail izquierdo de publicidad */}
@@ -138,7 +147,7 @@ export default async function HomePage() {
       {/* Publicidad horizontal */}
       <div className="mt-10 flex justify-center lg:mt-16">
         <AdPlaceholder
-          className="h-[100px] w-full max-w-[1034px] sm:h-[145px]"
+          className="aspect-1034/145 w-full max-w-258.5"
           ad={ADS.propertyDreamz}
           sizes="(min-width: 1034px) 1034px, 100vw"
         />
@@ -152,7 +161,7 @@ export default async function HomePage() {
       {/* Publicidad horizontal */}
       <div className="mt-10 flex justify-center lg:mt-16">
         <AdPlaceholder
-          className="h-[100px] w-full max-w-[1034px] sm:h-[145px]"
+          className="aspect-1034/145 w-full max-w-258.5"
           ad={ADS.propertyDreamz}
           sizes="(min-width: 1034px) 1034px, 100vw"
         />
