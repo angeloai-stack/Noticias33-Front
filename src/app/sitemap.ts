@@ -28,6 +28,30 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: "hourly",
       priority: 1,
     },
+    {
+      url: `${base}/sobre-nosotros`,
+      lastModified: new Date(),
+      changeFrequency: "yearly",
+      priority: 0.3,
+    },
+    {
+      url: `${base}/contacto`,
+      lastModified: new Date(),
+      changeFrequency: "yearly",
+      priority: 0.3,
+    },
+    {
+      url: `${base}/politica-de-privacidad`,
+      lastModified: new Date(),
+      changeFrequency: "yearly",
+      priority: 0.2,
+    },
+    {
+      url: `${base}/terminos-de-uso`,
+      lastModified: new Date(),
+      changeFrequency: "yearly",
+      priority: 0.2,
+    },
   ];
 
   // Categorías (si la API falla, el sitemap sale al menos con la portada)
