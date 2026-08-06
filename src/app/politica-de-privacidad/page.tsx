@@ -4,6 +4,8 @@
 // ============================================================================
 
 import type { Metadata } from "next";
+import { LegalToc } from "@/components/layout/legal-toc";
+import { PageHero } from "@/components/layout/page-hero";
 
 export const metadata: Metadata = {
   title: "Política de privacidad",
@@ -11,25 +13,26 @@ export const metadata: Metadata = {
     "Aviso de privacidad de Noticias 33: datos personales que recabamos, finalidades del tratamiento y derechos ARCO.",
 };
 
-export default function PrivacyPolicyPage() {
-  return (
-    <div className="animate-fade-up mx-auto max-w-3xl px-4 py-10 sm:px-6 lg:px-8">
-      <h1 className="font-helvetica text-3xl font-bold text-n33-blue">
-        Política de privacidad
-      </h1>
-
-      <div className="prose-n33 mt-8">
-        <h2>Responsable del tratamiento de los datos personales</h2>
-        <p>
-          Noticias 33, con domicilio en Tijuana, Baja California, es
-          responsable del tratamiento de los datos personales recabados a
-          través de este sitio web y de sus plataformas digitales, de
-          conformidad con la Ley Federal de Protección de Datos Personales en
-          Posesión de los Particulares, su Reglamento y demás disposiciones
-          aplicables.
-        </p>
-
-        <h2>Datos personales que recabamos</h2>
+const SECTIONS = [
+  {
+    id: "responsable",
+    title: "Responsable del tratamiento de los datos personales",
+    body: (
+      <p>
+        Noticias 33, con domicilio en Tijuana, Baja California, es
+        responsable del tratamiento de los datos personales recabados a
+        través de este sitio web y de sus plataformas digitales, de
+        conformidad con la Ley Federal de Protección de Datos Personales en
+        Posesión de los Particulares, su Reglamento y demás disposiciones
+        aplicables.
+      </p>
+    ),
+  },
+  {
+    id: "datos-que-recabamos",
+    title: "Datos personales que recabamos",
+    body: (
+      <>
         <p>
           Dependiendo de la interacción con nuestros servicios, podremos
           recabar los siguientes datos personales:
@@ -39,14 +42,16 @@ export default function PrivacyPolicyPage() {
           <li>Correo electrónico.</li>
           <li>Número telefónico.</li>
           <li>
-            Información contenida en mensajes enviados mediante formularios de
-            contacto.
+            Información contenida en mensajes enviados mediante formularios
+            de contacto.
           </li>
           <li>
             Material multimedia enviado por los usuarios, incluyendo
             fotografías, videos y documentos.
           </li>
-          <li>Dirección IP, navegador, sistema operativo y datos de navegación.</li>
+          <li>
+            Dirección IP, navegador, sistema operativo y datos de navegación.
+          </li>
           <li>Información obtenida mediante cookies y tecnologías similares.</li>
         </ul>
         <p>
@@ -56,8 +61,14 @@ export default function PrivacyPolicyPage() {
           resulte estrictamente necesaria para atender la solicitud
           correspondiente y conforme a la legislación aplicable.
         </p>
-
-        <h2>Finalidades del tratamiento</h2>
+      </>
+    ),
+  },
+  {
+    id: "finalidades",
+    title: "Finalidades del tratamiento",
+    body: (
+      <>
         <p>
           Los datos personales serán utilizados para las siguientes
           finalidades primarias:
@@ -80,8 +91,14 @@ export default function PrivacyPolicyPage() {
           El usuario podrá manifestar su negativa para estas finalidades en
           cualquier momento.
         </p>
-
-        <h2>Transferencia de datos personales</h2>
+      </>
+    ),
+  },
+  {
+    id: "transferencia",
+    title: "Transferencia de datos personales",
+    body: (
+      <>
         <p>
           Noticias 33 no venderá, rentará ni comercializará los datos
           personales de sus usuarios.
@@ -96,12 +113,18 @@ export default function PrivacyPolicyPage() {
           </li>
           <li>
             Sea indispensable para la prestación de servicios tecnológicos
-            relacionados con el funcionamiento del sitio web, bajo acuerdos de
-            confidencialidad.
+            relacionados con el funcionamiento del sitio web, bajo acuerdos
+            de confidencialidad.
           </li>
         </ul>
-
-        <h2>Derechos ARCO</h2>
+      </>
+    ),
+  },
+  {
+    id: "derechos-arco",
+    title: "Derechos ARCO",
+    body: (
+      <>
         <p>
           El titular de los datos personales podrá ejercer en cualquier
           momento sus derechos de Acceso, Rectificación, Cancelación y
@@ -119,40 +142,62 @@ export default function PrivacyPolicyPage() {
             cuando corresponda.
           </li>
         </ul>
-
-        <h2>Medidas de seguridad</h2>
-        <p>
-          Noticias 33 adopta medidas administrativas, técnicas y físicas
-          razonables para proteger los datos personales contra daño, pérdida,
-          alteración, destrucción, acceso o tratamiento no autorizado.
-        </p>
-
-        <h2>Conservación de los datos</h2>
-        <p>
-          Los datos personales serán conservados únicamente durante el tiempo
-          necesario para cumplir las finalidades descritas en este aviso,
-          atender obligaciones legales o resolver controversias derivadas del
-          uso de nuestros servicios.
-        </p>
-
-        <h2>Autoridad competente</h2>
-        <p>
-          Si el titular considera que su derecho a la protección de datos
-          personales ha sido vulnerado, podrá acudir al Instituto Nacional de
-          Transparencia, Acceso a la Información y Protección de Datos
-          Personales (INAI), o a la autoridad que legalmente asuma sus
-          funciones, conforme a la legislación vigente.
-        </p>
-
-        <h2>Cambios al Aviso de Privacidad</h2>
-        <p>
-          Noticias 33 podrá modificar o actualizar el presente Aviso de
-          Privacidad para atender reformas legales, cambios en sus procesos
-          internos o nuevos servicios. Las modificaciones serán publicadas en
-          este sitio web y surtirán efectos desde la fecha de su publicación.
-        </p>
-
-        <h2>Contacto</h2>
+      </>
+    ),
+  },
+  {
+    id: "medidas-de-seguridad",
+    title: "Medidas de seguridad",
+    body: (
+      <p>
+        Noticias 33 adopta medidas administrativas, técnicas y físicas
+        razonables para proteger los datos personales contra daño, pérdida,
+        alteración, destrucción, acceso o tratamiento no autorizado.
+      </p>
+    ),
+  },
+  {
+    id: "conservacion",
+    title: "Conservación de los datos",
+    body: (
+      <p>
+        Los datos personales serán conservados únicamente durante el tiempo
+        necesario para cumplir las finalidades descritas en este aviso,
+        atender obligaciones legales o resolver controversias derivadas del
+        uso de nuestros servicios.
+      </p>
+    ),
+  },
+  {
+    id: "autoridad-competente",
+    title: "Autoridad competente",
+    body: (
+      <p>
+        Si el titular considera que su derecho a la protección de datos
+        personales ha sido vulnerado, podrá acudir al Instituto Nacional de
+        Transparencia, Acceso a la Información y Protección de Datos
+        Personales (INAI), o a la autoridad que legalmente asuma sus
+        funciones, conforme a la legislación vigente.
+      </p>
+    ),
+  },
+  {
+    id: "cambios-al-aviso",
+    title: "Cambios al Aviso de Privacidad",
+    body: (
+      <p>
+        Noticias 33 podrá modificar o actualizar el presente Aviso de
+        Privacidad para atender reformas legales, cambios en sus procesos
+        internos o nuevos servicios. Las modificaciones serán publicadas en
+        este sitio web y surtirán efectos desde la fecha de su publicación.
+      </p>
+    ),
+  },
+  {
+    id: "contacto",
+    title: "Contacto",
+    body: (
+      <>
         <p>
           Para cualquier duda relacionada con este Aviso de Privacidad, el
           tratamiento de datos personales o el ejercicio de los derechos
@@ -173,8 +218,8 @@ export default function PrivacyPolicyPage() {
           Redes sociales oficiales:
           <br />
           Facebook, Instagram, TikTok, YouTube y demás plataformas oficiales
-          de Noticias 33, disponibles mediante los enlaces e iconos publicados
-          en este sitio web.
+          de Noticias 33, disponibles mediante los enlaces e iconos
+          publicados en este sitio web.
         </p>
         <p>
           Horario de atención:
@@ -187,6 +232,38 @@ export default function PrivacyPolicyPage() {
           <br />
           Tijuana, Baja California, México.
         </p>
+      </>
+    ),
+  },
+];
+
+export default function PrivacyPolicyPage() {
+  return (
+    <div className="animate-fade-up">
+      <PageHero
+        eyebrow="Aviso legal"
+        title="Política de privacidad"
+        description="Cómo recabamos, usamos y protegemos tus datos personales en Noticias 33."
+      />
+
+      <div className="mx-auto max-w-5xl gap-12 px-4 py-10 sm:px-6 lg:grid lg:grid-cols-[220px_1fr] lg:px-8 lg:py-14">
+        <LegalToc
+          items={SECTIONS.map((section) => ({
+            id: section.id,
+            label: section.title,
+          }))}
+        />
+
+        <div className="rounded-2xl bg-n33-surface p-6 shadow-[0_16px_35px_-24px_rgba(0,0,0,0.25)] sm:p-8">
+          <div className="prose-n33">
+            {SECTIONS.map((section) => (
+              <section key={section.id} id={section.id}>
+                <h2>{section.title}</h2>
+                {section.body}
+              </section>
+            ))}
+          </div>
+        </div>
       </div>
     </div>
   );

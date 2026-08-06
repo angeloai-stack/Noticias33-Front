@@ -10,9 +10,8 @@
 // iframe y no debe ocultarse ni recortarse.
 // ============================================================================
 
-import { useEffect, useMemo, useRef, useState } from "react";
-import type { CityWeather } from "@/lib/api/weather";
-import { useNearestCitySlug } from "@/lib/hooks/use-nearest-city";
+import { useMemo, useState } from "react";
+import { DEFAULT_CITY_SLUG, type CityWeather } from "@/lib/api/weather";
 
 type WeatherCardProps = {
   /** Clima actual de cada ciudad cubierta, o [] si falló la API. */
@@ -51,33 +50,22 @@ function buildWindyEmbedUrl(lat: number, lon: number): string {
 }
 
 export function WeatherCard({ cities }: WeatherCardProps) {
+  // Sin geolocalización: Tijuana por defecto, cambio de ciudad solo manual
+  // desde el selector.
   const [selectedSlug, setSelectedSlug] = useState(
-    cities.find((city) => city.slug === "tijuana")?.slug ?? cities[0]?.slug ?? "",
+    cities.find((city) => city.slug === DEFAULT_CITY_SLUG)?.slug ??
+      cities[0]?.slug ??
+      "",
   );
-  const hasUserSelected = useRef(false);
-  const nearestSlug = useNearestCitySlug();
-
-  // Si quien visita no eligió ciudad todavía, se cambia a la más cercana
-  // según su IP en cuanto /api/geo resuelve.
-  useEffect(() => {
-    if (
-      !hasUserSelected.current &&
-      nearestSlug &&
-      cities.some((city) => city.slug === nearestSlug)
-    ) {
-      setSelectedSlug(nearestSlug);
-    }
-  }, [nearestSlug, cities]);
 
   function selectCity(slug: string) {
-    hasUserSelected.current = true;
     setSelectedSlug(slug);
   }
 
   const selected = useMemo(
     () =>
       cities.find((city) => city.slug === selectedSlug) ??
-      cities.find((city) => city.slug === "tijuana") ??
+      cities.find((city) => city.slug === DEFAULT_CITY_SLUG) ??
       cities[0],
     [cities, selectedSlug],
   );

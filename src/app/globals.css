@@ -213,6 +213,12 @@ body {
   font-size: 1.5rem;
 }
 
+/* Páginas legales: secciones envueltas en <section>, sin doble espacio
+   arriba de la primera (ya trae margen la tarjeta que las contiene). */
+.prose-n33 > section:first-child h2 {
+  margin-top: 0;
+}
+
 .prose-n33 h3 {
   font-size: 1.25rem;
 }

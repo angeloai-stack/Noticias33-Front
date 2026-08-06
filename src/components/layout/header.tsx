@@ -13,8 +13,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useMemo, useState } from "react";
 import { mainNav } from "@/lib/config/site";
-import type { CityWeather } from "@/lib/api/weather";
-import { useNearestCitySlug } from "@/lib/hooks/use-nearest-city";
+import { DEFAULT_CITY_SLUG, type CityWeather } from "@/lib/api/weather";
 
 /** Fecha de hoy en formato editorial: "Martes 23 de junio del 2026". */
 function formatToday() {
@@ -92,14 +91,12 @@ export function Header({ headline, weather }: HeaderProps) {
   const [estatalOpenDesktop, setEstatalOpenDesktop] = useState(false);
   const [estatalOpenMobile, setEstatalOpenMobile] = useState(false);
 
-  // Ciudad más cercana a quien visita (según su IP); Tijuana hasta resolver.
-  const nearestSlug = useNearestCitySlug();
+  // Sin geolocalización: siempre Tijuana (el clima de otras ciudades solo
+  // se ve manualmente, en el selector de WeatherCard).
   const activeWeather = useMemo(
     () =>
-      weather.find((city) => city.slug === nearestSlug) ??
-      weather.find((city) => city.slug === "tijuana") ??
-      weather[0],
-    [weather, nearestSlug],
+      weather.find((city) => city.slug === DEFAULT_CITY_SLUG) ?? weather[0],
+    [weather],
   );
 
   return (

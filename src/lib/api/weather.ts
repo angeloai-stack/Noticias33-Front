@@ -8,8 +8,9 @@ const OPEN_METEO_URL = "https://api.open-meteo.com/v1/forecast";
 
 /**
  * Ciudades de Baja California mostradas en el widget de clima. Tijuana va
- * primero: es la ciudad por defecto (WeatherCard y el badge del nav usan la
- * primera del arreglo hasta que la geolocalización por IP resuelve).
+ * primero: es la ciudad por defecto, fija (sin geolocalización) tanto en
+ * el badge del nav como en WeatherCard; esta última permite cambiarla
+ * manualmente con su selector.
  */
 const CITIES = [
   { slug: "tijuana", name: "Tijuana", lat: 32.5149, lon: -117.0382 },
@@ -133,50 +134,5 @@ export async function getWeatherForCities(): Promise<CityWeather[]> {
   }
 }
 
-const KM_PER_DEGREE_LAT = 111;
-
-/** Distancia aproximada en km entre dos coordenadas (suficiente a esta escala). */
-function distanceKm(lat1: number, lon1: number, lat2: number, lon2: number) {
-  const dLat = (lat1 - lat2) * KM_PER_DEGREE_LAT;
-  const dLon =
-    (lon1 - lon2) * KM_PER_DEGREE_LAT * Math.cos((lat1 * Math.PI) / 180);
-
-  return Math.sqrt(dLat * dLat + dLon * dLon);
-}
-
-/** Ciudad por defecto: la geolocalización por IP solo la desplaza si otra
- * ciudad queda claramente más cerca (ver DEFAULT_CITY_BIAS_KM). */
-const DEFAULT_CITY_SLUG = "tijuana";
-
-/**
- * Margen a favor de la ciudad por defecto. La geolocalización por IP suele
- * tener 10-50 km de error, así que sin este margen un visitante de la ciudad
- * por defecto con un poco de ruido en su IP podría terminar viendo el clima
- * de la ciudad cubierta más cercana.
- */
-const DEFAULT_CITY_BIAS_KM = 12;
-
-/**
- * Ciudad cubierta más cercana a unas coordenadas (p. ej. la geolocalización
- * por IP de Vercel), con la ciudad por defecto ligeramente favorecida para
- * absorber el ruido típico de la geolocalización por IP.
- */
-export function getNearestCitySlug(lat: number, lon: number): string {
-  let nearest: (typeof CITIES)[number] = CITIES[0];
-  let nearestScore = Infinity;
-
-  for (const city of CITIES) {
-    const distance = distanceKm(lat, lon, city.lat, city.lon);
-    const score =
-      city.slug === DEFAULT_CITY_SLUG
-        ? distance - DEFAULT_CITY_BIAS_KM
-        : distance;
-
-    if (score < nearestScore) {
-      nearestScore = score;
-      nearest = city;
-    }
-  }
-
-  return nearest.slug;
-}
+/** Slug de la ciudad por defecto en todo el sitio (sin geolocalización). */
+export const DEFAULT_CITY_SLUG = "tijuana";
