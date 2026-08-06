@@ -151,6 +151,57 @@ export async function getArticlesByCategory(
   return toPaginated(data, page, pageSize, total, totalPages);
 }
 
+/** Dos listas independientes que alimentan el carrusel filtrable del detalle de noticia. */
+export type RelatedArticlesGroup = {
+  /** Otros posts de la misma categoría. */
+  related: Article[];
+  /** Otros posts del mismo autor (vacío si el post no tiene autor). */
+  byAuthor: Article[];
+};
+
+/**
+ * Noticias relacionadas con un artículo: posts de la misma categoría y posts
+ * del mismo autor, excluyendo siempre el artículo actual. Se piden por
+ * separado (no se combinan) porque el carrusel del detalle permite alternar
+ * entre una lista y la otra.
+ */
+export async function getRelatedArticles(
+  article: Article,
+  limit = 10,
+): Promise<RelatedArticlesGroup> {
+  const relatedRequest = apiFetch<WpPost[]>("posts", {
+    params: {
+      ...EMBED_PARAMS,
+      categories: article.category.id,
+      exclude: article.id,
+      per_page: limit,
+    },
+    next: { tags: ["posts"] },
+  });
+
+  const byAuthorRequest = article.author
+    ? apiFetch<WpPost[]>("posts", {
+        params: {
+          ...EMBED_PARAMS,
+          author: article.author.id,
+          exclude: article.id,
+          per_page: limit,
+        },
+        next: { tags: ["posts"] },
+      })
+    : Promise.resolve<WpPost[]>([]);
+
+  const [relatedPosts, byAuthorPosts] = await Promise.all([
+    relatedRequest,
+    byAuthorRequest,
+  ]);
+
+  return {
+    related: relatedPosts.map(mapWpPostToArticle),
+    byAuthor: byAuthorPosts.map(mapWpPostToArticle),
+  };
+}
+
 /**
  * Búsqueda de texto libre. No se cachea (revalidate: 0) porque cada consulta
  * es distinta y los resultados deben ser frescos.

@@ -137,7 +137,7 @@ body {
 }
 
 .ticker-track {
-  animation: marquee 22s linear infinite;
+  animation: marquee 16s linear infinite;
 }
 
 .ticker-track:hover {
