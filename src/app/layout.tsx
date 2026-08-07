@@ -7,6 +7,7 @@
 import type { Metadata } from "next";
 import { Inter, Oswald } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
+import { AdModal } from "@/components/layout/ad-modal";
 import { SiteShell } from "@/components/layout/site-shell";
 import { JsonLd } from "@/components/seo/json-ld";
 import { siteConfig } from "@/lib/config/site";
@@ -50,6 +51,7 @@ export default function RootLayout({
         {/* Datos estructurados globales: organización + sitio con buscador */}
         <JsonLd data={websiteJsonLd()} />
         <SiteShell>{children}</SiteShell>
+        <AdModal />
         <Analytics />
       </body>
     </html>

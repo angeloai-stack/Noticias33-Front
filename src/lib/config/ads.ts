@@ -8,6 +8,13 @@
 /** Enlace de contacto directo (WhatsApp) del anunciante Volt Lab Agency. */
 const VOLTLAB_WHATSAPP = "https://wa.me/526647089550";
 
+/** WhatsApp de Noticias 33 para contratar publicidad en el sitio. */
+export const ADVERTISING_WHATSAPP =
+  "https://wa.me/526643011616?text=" +
+  encodeURIComponent(
+    "Hola, quiero información sobre publicidad en Noticias 33.",
+  );
+
 export const ADS = {
   voltlabRail: {
     imageUrl: "/ads/voltlab-rail.jpg",
